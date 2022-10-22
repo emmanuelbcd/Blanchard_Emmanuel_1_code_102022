@@ -34,8 +34,8 @@ async function insertProducts() {
       const article = document.createElement ('article'); 
   
       const anchor = document.createElement ('a');
-      //anchor.href = "./product.html?id=+article._id";
-      anchor.href = "./product.html?id=42";
+      anchor.href = "./product.html?id=+article._id";
+      //anchor.href = "./product.html?id=42";
 
       const imageElement = document.createElement ('img');
       imageElement.src = article.imageUrl;
