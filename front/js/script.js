@@ -1,6 +1,6 @@
 //requêter l'Api pour lui demander l'ensemble des produits
 
-async function fecthProducts () {
+async function fetchProducts () {
 
     const apiRequest = await fetch ("http://localhost:3000/api/products", {
       method: 'GET',
@@ -17,11 +17,11 @@ async function fecthProducts () {
 }
 
 //console.table
-fecthProducts().then(products => console.table(products))
+fetchProducts().then(products => console.table(products))
 
 // insérer dans la page l'ensemble des produits fournis par l'Api
 async function insertProducts() {
-  const result = await fecthProducts()
+  const result = await fetchProducts()
   .then ((product) => {
 
   
