@@ -16,7 +16,7 @@ async function fetchProducts () {
     }
 }
 
-//console.table
+//Affiche dans la console le tableau de l'ensemble des produits
 fetchProducts().then(products => console.table(products))
 
 // insérer dans la page l'ensemble des produits fournis par l'Api
