@@ -5,14 +5,24 @@
     console.log(productId);
 
 //après avoir récupéré l'id, requêter l'API pour récupérer les détails du produit
-fetch (`http://localhost:3000/api/products/${productId}`)
+
+function getProductDetails () {
+    const productDetails = fetch (`http://localhost:3000/api/products/${productId}`, {
+    method: 'GET',
+    headers: {
+      "Accept" : "application/json"
+    }
+    })
     .then ((resp) => resp.json())
-    .then ((product) => {
-        console.log(product);
+    .then ((data) => {
+        console.log(data);
     })
     .catch ((error) => {
         console.log(error);
     });
+}
+
+getProductDetails ()
 
 
 //Récupération des éléments du DOM
