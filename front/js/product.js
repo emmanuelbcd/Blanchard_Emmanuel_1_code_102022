@@ -6,8 +6,8 @@
 
 //après avoir récupéré l'id, requêter l'API pour récupérer les détails du produit
 
-function getProductDetails () {
-    const productDetails = fetch (`http://localhost:3000/api/products/${productId}`, {
+async function getProductDetails () {
+    const productDetails = await fetch (`http://localhost:3000/api/products/${productId}`, {
     method: 'GET',
     headers: {
       "Accept" : "application/json"
@@ -15,23 +15,51 @@ function getProductDetails () {
     })
     .then ((resp) => resp.json())
     .then ((data) => {
-        console.log(data);
+        console.table(data);
     })
     .catch ((error) => {
         console.log(error);
     });
 }
 
-getProductDetails ()
+getProductDetails ();
 
+//après avoir récupéré les détails du produit, insertion des détails du produit dans la page
+async function insertProductDetails () {
+    const result = await getProductDetails()
+    .then ((product) => {
 
-//Récupération des éléments du DOM
-const image = document.querySelector(".item_img"); //Récupération des sélecteurs css pour l'image
-const title = document.getElementById("#title"); //Récupération de l'élément titre
-const price = document.getElementById("#price"); //Récupération de l'élément prix
-const description = document.getElementById("#description"); //Récupération de l'élément description
-const colors = document.getElementById("#colors"); //Récupération de l'élément couleurs qui prend différentes valeurs
+        //image du produit
+        const image = document.querySelector(".item_img"); //Récupération des sélecteurs css pour l'image
+        const imageElement = document.createElement ("img");
+        imageElement.src = product.imageUrl; //adresse URL de l'image
+        imageElement.alt = product.altTxt; //texte alternatif de l'image
+        image.appendChild(imageElement);
 
-//Création des éléments et remplissage du texte ou de la source de l'image
+        //titre
+        const title = document.getElementById("#title"); //Récupération de l'élément titre
+        title.innerText = product.name;
+
+        //prix
+        const price = document.getElementById("#price"); //Récupération de l'élément prix
+        price.innerText = product.price;
+
+        //description
+        const description = document.getElementById("#description"); //Récupération de l'élément description
+        description.innerText = product.description;
+
+        //couleurs
+        const colors = document.getElementById("#colors"); //Récupération de l'élément couleurs qui prend différentes valeurs
+
+        for (let i=0; i < product.colors.length; i++) {
+            const colorElement = document.createElement("option");
+            colorElement.setAttribute("value", product.colors[i]);
+            colorElement.innerText = product.colors[i];
+            product.colors.appendChild("color");
+    }
+   });
+}
+
+insertProductDetails ()
 
 
