@@ -16,6 +16,7 @@ async function getProductDetails () {
     .then ((resp) => resp.json())
     .then ((data) => {
         console.table(data);
+        drawProduct(data);
     })
     .catch ((error) => {
         console.log(error);
@@ -25,10 +26,9 @@ async function getProductDetails () {
 getProductDetails ();
 
 //après avoir récupéré les détails du produit, insertion des détails du produit dans la page
-async function insertProductDetails () {
-    const result = await getProductDetails()
-    .then ((product) => {
-
+//on dessine le produit
+let drawProduct = function ( product )
+{
         //image du produit
         const image = document.querySelector(".item_img"); //Récupération des sélecteurs css pour l'image
         const imageElement = document.createElement ("img");
@@ -37,29 +37,30 @@ async function insertProductDetails () {
         image.appendChild(imageElement);
 
         //titre
-        const title = document.getElementById("#title"); //Récupération de l'élément titre
+        const title = document.getElementById("title"); //Récupération de l'élément titre
         title.innerText = product.name;
 
         //prix
-        const price = document.getElementById("#price"); //Récupération de l'élément prix
+        const price = document.getElementById("price"); //Récupération de l'élément prix
         price.innerText = product.price;
 
         //description
-        const description = document.getElementById("#description"); //Récupération de l'élément description
+        const description = document.getElementById("description"); //Récupération de l'élément description
         description.innerText = product.description;
 
         //couleurs
-        const colors = document.getElementById("#colors"); //Récupération de l'élément couleurs qui prend différentes valeurs
+        const colors = document.getElementById("colors"); //Récupération de l'élément couleurs qui prend différentes valeurs
 
         for (let i=0; i < product.colors.length; i++) {
             const colorElement = document.createElement("option");
             colorElement.setAttribute("value", product.colors[i]);
             colorElement.innerText = product.colors[i];
-            product.colors.appendChild("color");
-    }
-   });
+            colors.appendChild("colorElement");
+        }
 }
 
-insertProductDetails ()
+
+
+
 
 
