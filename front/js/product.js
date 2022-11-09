@@ -29,8 +29,10 @@ getProductDetails ();
 //on dessine le produit
 let drawProduct = function ( product )
 {
+        console.log(product)
+
         //image du produit
-        const image = document.querySelector(".item_img"); //Récupération des sélecteurs css pour l'image
+        const image = document.querySelector(".item__img"); //Récupération des sélecteurs css pour l'image
         const imageElement = document.createElement ("img");
         imageElement.src = product.imageUrl; //adresse URL de l'image
         imageElement.alt = product.altTxt; //texte alternatif de l'image
@@ -55,7 +57,7 @@ let drawProduct = function ( product )
             const colorElement = document.createElement("option");
             colorElement.setAttribute("value", product.colors[i]);
             colorElement.innerText = product.colors[i];
-            colors.appendChild("colorElement");
+            colors.appendChild(colorElement);
         }
 }
 
