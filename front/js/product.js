@@ -40,15 +40,15 @@ let drawProduct = function ( product )
 
         //titre
         const title = document.getElementById("title"); //Récupération de l'élément titre
-        title.innerText = product.name;
+        title.textContent = product.name;
 
         //prix
         const price = document.getElementById("price"); //Récupération de l'élément prix
-        price.innerText = product.price;
+        price.textContent = product.price;
 
         //description
         const description = document.getElementById("description"); //Récupération de l'élément description
-        description.innerText = product.description;
+        description.textContent = product.description;
 
         //couleurs
         const colors = document.getElementById("colors"); //Récupération de l'élément couleurs qui prend différentes valeurs
@@ -56,11 +56,52 @@ let drawProduct = function ( product )
         for (let i=0; i < product.colors.length; i++) {
             const colorElement = document.createElement("option");
             colorElement.setAttribute("value", product.colors[i]);
-            colorElement.innerText = product.colors[i];
+            colorElement.textContent = product.colors[i];
             colors.appendChild(colorElement);
         }
 }
 
+//Ajout au panier
+
+//Récupération de l'élément sur lequel on veut détecter le clic
+const buttonAddToCart = document.getElementById("addToCart"); 
+//Ajout d'un écouteur d'événement au clic sur le boutton d'ajout au panier
+buttonAddToCart.addEventListener("click", function(event){ //type d'événement que l'on écoute et fonction appelée lors du déclenchement de l'événement
+    console.log(event)
+});
+
+
+
+//Récupération de l'input colors
+const colorSelect = document.getElementById("colors");
+//Récupération de la couleur choisie par l'utilisateur dans l'option couleurs
+let colorValue = colorSelect.value;
+
+//Récupération de l'input quantity
+const quantitySelect = document.getElementById("quantity");
+//Récupération de la quantité choisie par l'utilisateur
+let quantityValue = quantitySelect.value; // valeur
+let quantityValueMax = quantitySelect.max; // valeur max 
+let quantityValueMin = quantitySelect.min; //valeur min 
+//console.log(quantityValue);
+
+//Création d'un objet qui récupère les paramètres pour l'envoyer dans le localStorage
+let obj = {
+    id: productId,
+    color: colorValue,
+    number: quantityValue,
+}
+
+//console.log(obj.id);
+
+//transformation de l'objet en json
+const valueObject = JSON.stringify(obj);
+
+//stockage des informations dans le localStorage
+window.localStorage.setItem("", valueObject);
+
+//récupération des objets éventuellement stockés dans le localStorage
+let objectLocalStorage = window.localStorage.getItem("obj")
 
 
 

@@ -16,7 +16,7 @@ async function fetchProducts () {
     }
 }
 
-//Affiche dans la console le tableau de l'ensemble des produits
+//Appel fetchProducts + Affiche dans la console le tableau de l'ensemble des produits
 fetchProducts().then(products => console.table(products))
 
 // insérer dans la page l'ensemble des produits fournis par l'Api
@@ -41,11 +41,11 @@ for (let i=0; i < product.length; i++) {
       imageElement.alt = product[i].altTxt;
   
       const nameElement = document.createElement ("h3");
-      nameElement.innerText = product[i].name;
+      nameElement.textContent = product[i].name;
       nameElement.setAttribute("class", "productName");
   
       const descriptionElement = document.createElement ("p");
-      descriptionElement.innerText = product[i].description;
+      descriptionElement.textContent = product[i].description;
       descriptionElement.setAttribute("class", "productDescription");
   
       //Ajout des éléments créés dans le DOM
