@@ -61,16 +61,40 @@ let drawProduct = function ( product )
         }
 }
 
-//Ajout au panier
-
 //Récupération de l'élément sur lequel on veut détecter le clic
 const buttonAddToCart = document.getElementById("addToCart"); 
 //Ajout d'un écouteur d'événement au clic sur le boutton d'ajout au panier
 buttonAddToCart.addEventListener("click", function(event){ //type d'événement que l'on écoute et fonction appelée lors du déclenchement de l'événement
     console.log(event)
+
+    // objectLocalStorage est une chaîne de texte, on le retransforme en objet.
+    let obj = JSON.parse(objectLocalStorage)
+    // On met à jour la couleur
+    obj.color = document.getElementById("colors").value
+    // On met à jour la quantité. Ajout de sécurité avec parseInt, on force la valeur étant un entier.
+    obj.number = parseInt( document.getElementById("quantity").value )
+    // Pour contrer les rigolos qui auraient passé autre chose, on vérifie.
+    if( isNaN( parseInt(obj.number) ) ) //si ce n'est pas un nombre
+    { 
+        obj.number = quantityValueMin 
+    }
+    else
+    {
+        // On recadre les valeurs si elles sont hors champs
+        if( obj.number > quantityValueMax ) { //si le nombre saisi est supérieur à la valeur
+             obj.number = quantityValueMax; //on recadre la quantité à la valeur max dans le panier
+            alert ("Quantité maximale dépassée. 100 articles ajoutés au panier.") //et on alerte l'utilisateur
+            }
+        if( obj.number < quantityValueMin ) { //si le nombre saisi est inférieur à la valeur (y compris négatif)
+             obj.number = quantityValueMin; //on recadre la quantité à la valeur min dans le panier
+             alert ("Quantité inférieure au minimum. 1 article ajouté au panier.")  //et on alerte l'utilisateur
+            }
+    }
+    // On met à jour.
+    localStorage.setItem("obj", JSON.stringify(obj) )
+
+    
 });
-
-
 
 //Récupération de l'input colors
 const colorSelect = document.getElementById("colors");
@@ -83,7 +107,6 @@ const quantitySelect = document.getElementById("quantity");
 let quantityValue = quantitySelect.value; // valeur
 let quantityValueMax = quantitySelect.max; // valeur max 
 let quantityValueMin = quantitySelect.min; //valeur min 
-//console.log(quantityValue);
 
 //Création d'un objet qui récupère les paramètres pour l'envoyer dans le localStorage
 let obj = {
@@ -92,18 +115,11 @@ let obj = {
     number: quantityValue,
 }
 
-//console.log(obj.id);
-
-//transformation de l'objet en json
-const valueObject = JSON.stringify(obj);
-
-//stockage des informations dans le localStorage
-window.localStorage.setItem("", valueObject);
+//on crée l'objet de base.
+localStorage.setItem("obj", JSON.stringify(obj));
 
 //récupération des objets éventuellement stockés dans le localStorage
-let objectLocalStorage = window.localStorage.getItem("obj")
-
-
+let objectLocalStorage = localStorage.getItem("obj")
 
 
 
