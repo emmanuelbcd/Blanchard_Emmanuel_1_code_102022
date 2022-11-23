@@ -67,59 +67,62 @@ const buttonAddToCart = document.getElementById("addToCart");
 buttonAddToCart.addEventListener("click", function(event){ //type d'événement que l'on écoute et fonction appelée lors du déclenchement de l'événement
     console.log(event)
 
-    // objectLocalStorage est une chaîne de texte, on le retransforme en objet.
-    let obj = JSON.parse(objectLocalStorage)
-    // On met à jour la couleur
-    obj.color = document.getElementById("colors").value
-    // On met à jour la quantité. Ajout de sécurité avec parseInt, on force la valeur étant un entier.
-    obj.number = parseInt( document.getElementById("quantity").value )
-    // Pour contrer les rigolos qui auraient passé autre chose, on vérifie.
-    if( isNaN( parseInt(obj.number) ) ) //si ce n'est pas un nombre
-    { 
-        obj.number = quantityValueMin 
-    }
-    else
-    {
-        // On recadre les valeurs si elles sont hors champs
-        if( obj.number > quantityValueMax ) { //si le nombre saisi est supérieur à la valeur
-             obj.number = quantityValueMax; //on recadre la quantité à la valeur max dans le panier
-            alert ("Quantité maximale dépassée. 100 articles ajoutés au panier.") //et on alerte l'utilisateur
-            }
-        if( obj.number < quantityValueMin ) { //si le nombre saisi est inférieur à la valeur (y compris négatif)
-             obj.number = quantityValueMin; //on recadre la quantité à la valeur min dans le panier
-             alert ("Quantité inférieure au minimum. 1 article ajouté au panier.")  //et on alerte l'utilisateur
-            }
-    }
-    // On met à jour.
-    localStorage.setItem("obj", JSON.stringify(obj) )
+    //Récupération de l'input colors
+    const colorSelect = document.getElementById("colors");
+    //Récupération de la couleur choisie par l'utilisateur dans l'option couleurs
+    let colorValue = colorSelect.value;
 
+    //Récupération de l'input quantity
+    const quantitySelect = document.getElementById("quantity");
+    //Récupération de la quantité choisie par l'utilisateur
+    let quantityValue = quantitySelect.value; // valeur
+    let quantityValueMax = quantitySelect.max; // valeur max 
+    let quantityValueMin = quantitySelect.min; //valeur min 
+
+    //Création d'un objet qui récupère les paramètres pour l'envoyer dans le localStorage (ObjectLocalStorage)
+    let obj = {
+        id: productId,
+        color: colorValue,
+        number: quantityValue,
+    }
+    console.log(obj);
+
+    //Initialisation du LocalStorage
+    //récupération de l'objet du localStorage (ObjectLocalStorage) grâce à getitem pour ajouter un nouvel objet
+    let objectLocalStorage = JSON.parse( localStorage.getItem("obj") );
+
+    //importation dans le localStorage (objectLocalStorage)
+    if ( objectLocalStorage == null ) { // si le panier est vide
+        objectLocalStorage = []; //création d'un array vide 
+        objectLocalStorage.push(obj);//on push l'object dans l'array
+        localStorage.setItem("obj", JSON.stringify(objectLocalStorage));
     
+        console.table(objectLocalStorage);
+    }
+    else { // sinon le panier comporte déjà 1 objet
+        let find = false ; //initialisation d'une variable avec false par défaut
+
+        for (let product of objectLocalStorage) { //le localStorage est parcouru pour trouver
+            //si l'id du product est égal à l'object choisi par l'utilisateur 
+            //et la couleur du product est égale à l'object choisi par l'uiliisateur
+            if (product.id === obj.id && product.color === obj.color) {
+                product.totalNumber = obj.number + product.number;
+            }
+            //si le nombre total contenu dans le localStorage est supérieur au panier max (100)
+            if (product.totalNumber > quantityValueMax) {
+                product.totalNumber = quantityValueMax; //on recadre les valeurs
+                alert ("Le panier comporte déjà 100 produits");
+                localStorage.setItem("obj", JSON.stringify(objectLocalStorage));//mise à jour du localStorage
+                find = true; //la condition est true
+                console.table(objectLocalStorage);
+            }
+        }
+        //
+        if (find === false) {
+            objectLocalStorage.push(obj); //on push l'object dans le localStorage
+            localStorage.setItem("obj", JSON.stringify(objectLocalStorage));
+            console.table(objectLocalStorage);
+        }
+    }
 });
-
-//Récupération de l'input colors
-const colorSelect = document.getElementById("colors");
-//Récupération de la couleur choisie par l'utilisateur dans l'option couleurs
-let colorValue = colorSelect.value;
-
-//Récupération de l'input quantity
-const quantitySelect = document.getElementById("quantity");
-//Récupération de la quantité choisie par l'utilisateur
-let quantityValue = quantitySelect.value; // valeur
-let quantityValueMax = quantitySelect.max; // valeur max 
-let quantityValueMin = quantitySelect.min; //valeur min 
-
-//Création d'un objet qui récupère les paramètres pour l'envoyer dans le localStorage
-let obj = {
-    id: productId,
-    color: colorValue,
-    number: quantityValue,
-}
-
-//on crée l'objet de base.
-localStorage.setItem("obj", JSON.stringify(obj));
-
-//récupération des objets éventuellement stockés dans le localStorage
-let objectLocalStorage = localStorage.getItem("obj")
-
-
 
