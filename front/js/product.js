@@ -87,42 +87,59 @@ buttonAddToCart.addEventListener("click", function(event){ //type d'événement 
     }
     console.log(obj);
 
-    //Initialisation du LocalStorage
+    //Ajout de sécurité avec parseInt, on force la valeur en un entier
+    obj.number = parseInt( document.getElementById("quantity").value )
+    // Pour contrer les rigolos qui auraient passés autre chose, on vérifie.
+    if( isNaN( parseInt(obj.number) ) )
+    { 
+        obj.number = quantityValueMin 
+    }
+    else
+    {
+        // On recadre les valeurs si elles sont hors champs
+        if( obj.number > quantityValueMax ){ obj.number = quantityValueMax }
+        if( obj.number < quantityValueMin ){ obj.number = quantityValueMin }
+    }
+
+    //enregistrement du nouvel objet dans le localStorage.
+    function saveObject (cart) {
+        //on enregistre dans le localStorage une valeur associée à une clé.
+        //sérialisation JSON : on transforme un object complexe en une chaîne de caractères
+        localStorage.setItem("obj", JSON.stringify(obj));
+    }
+    saveObject();
+
     //récupération de l'objet du localStorage (ObjectLocalStorage) grâce à getitem pour ajouter un nouvel objet
-    let objectLocalStorage = JSON.parse( localStorage.getItem("obj") );
-
-    //importation dans le localStorage (objectLocalStorage)
-    if ( objectLocalStorage == null ) { // si le panier est vide
-        objectLocalStorage = []; //création d'un array vide 
-        objectLocalStorage.push(obj);//on push l'object dans l'array
-        localStorage.setItem("obj", JSON.stringify(objectLocalStorage));
+    //on récupère l'item qui porte la clé enregistrée : obj
+    function getCart () {
+        let cart = localStorage.getItem("obj");
+        //importation dans le localStorage (objectLocalStorage) si le panier est vide
+        if ( cart == null ) { // si le panier est vide
+            cart = []; //création d'un array vide 
+            //cart.push(obj);//on push l'object dans l'array
+        }
+        else { //sinon le panier comporte déjà un objet
+            return JSON.parse(cart);
+        }
+        console.table(getCart);
+    }
     
-        console.table(objectLocalStorage);
-    }
-    else { // sinon le panier comporte déjà 1 objet
-        let find = false ; //initialisation d'une variable avec false par défaut
+    function addToCart (obj) {
+        let cart = getCart(); //on récupère l'object dans le localStorage
+        let searchId = cart.find(element => element.id == obj.id);
+        console.log(searchId); 
+        if (searchId != undefined) {
+            searchId.number++;
+        }
+        else {
+            obj.number = 1;
+            cart.push(obj); //on push l'oject dans l'array
+            saveObject();
+        }
 
-        for (let product of objectLocalStorage) { //le localStorage est parcouru pour trouver
-            //si l'id du product est égal à l'object choisi par l'utilisateur 
-            //et la couleur du product est égale à l'object choisi par l'uiliisateur
-            if (product.id === obj.id && product.color === obj.color) {
-                product.totalNumber = obj.number + product.number;
-            }
-            //si le nombre total contenu dans le localStorage est supérieur au panier max (100)
-            if (product.totalNumber > quantityValueMax) {
-                product.totalNumber = quantityValueMax; //on recadre les valeurs
-                alert ("Le panier comporte déjà 100 produits");
-                localStorage.setItem("obj", JSON.stringify(objectLocalStorage));//mise à jour du localStorage
-                find = true; //la condition est true
-                console.table(objectLocalStorage);
-            }
-        }
-        //
-        if (find === false) {
-            objectLocalStorage.push(obj); //on push l'object dans le localStorage
-            localStorage.setItem("obj", JSON.stringify(objectLocalStorage));
-            console.table(objectLocalStorage);
-        }
+        console.table(addToCart);
     }
+    
+    addToCart();
 });
 
