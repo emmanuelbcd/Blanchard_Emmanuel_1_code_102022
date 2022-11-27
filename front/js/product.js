@@ -85,6 +85,7 @@ buttonAddToCart.addEventListener("click", function(event){ //type d'événement 
         color: colorValue,
         number: quantityValue,
     }
+    let newObj = [obj];
     console.log(obj);
 
     //Ajout de sécurité avec parseInt, on force la valeur en un entier
@@ -143,5 +144,6 @@ buttonAddToCart.addEventListener("click", function(event){ //type d'événement 
     }
     
     addToCart();
+
 });
 
