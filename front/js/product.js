@@ -79,7 +79,7 @@ buttonAddToCart.addEventListener("click", function(event){ //type d'événement 
     let quantityValueMax = quantitySelect.max; // valeur max 
     let quantityValueMin = quantitySelect.min; //valeur min 
 
-    //Création d'un objet qui récupère les paramètres pour l'envoyer dans le localStorage (ObjectLocalStorage)
+    //Création d'un objet qui récupère les paramètres pour l'envoyer dans le localStorage
     let obj = {
         id: productId,
         color: colorValue,
@@ -105,38 +105,40 @@ buttonAddToCart.addEventListener("click", function(event){ //type d'événement 
     function saveObject (cart) {
         //on enregistre dans le localStorage une valeur associée à une clé.
         //sérialisation JSON : on transforme un object complexe en une chaîne de caractères
+        //JSON.stringify prend un objet et le transforme en chaîne de caractères
         localStorage.setItem("obj", JSON.stringify(obj));
     }
     saveObject();
 
-    //récupération de l'objet du localStorage (ObjectLocalStorage) grâce à getitem pour ajouter un nouvel objet
+    //récupération de l'objet du localStorage grâce à getitem pour ajouter un nouvel objet
     //on récupère l'item qui porte la clé enregistrée : obj
     function getCart () {
+        //on enregistre dans une variable cart ce qu'on a récupéré
         let cart = localStorage.getItem("obj");
-        //importation dans le localStorage (objectLocalStorage) si le panier est vide
-        if ( cart == null ) { // si le panier est vide
+        //importation dans le localStorage si le panier est vide
+        if ( cart == null ) { // si le panier n'existe pas
             cart = []; //création d'un array vide 
             //cart.push(obj);//on push l'object dans l'array
         }
-        else { //sinon le panier comporte déjà un objet
-            return JSON.parse(cart);
+        else { //sinon le panier existe déjà
+            return JSON.parse(cart); //JSON.parse prend une chaîne de caractères et le retransforme en objet 
         }
         console.table(getCart);
     }
     
     function addToCart (obj) {
         let cart = getCart(); //on récupère l'object dans le localStorage
+        //on cherche dans l'array s'il y a un produit dont l'Id est égal à l'Id de l'objet qu'on veut ajouter
         let searchId = cart.find(element => element.id == obj.id);
         console.log(searchId); 
-        if (searchId != undefined) {
+        if (searchId != undefined) { // s'il est différent de undefined, il existe déjà dans l'array
             searchId.number++;
         }
-        else {
+        else { // sinon
             obj.number = 1;
             cart.push(obj); //on push l'oject dans l'array
-            saveObject();
         }
-
+        saveObject();
         console.table(addToCart);
     }
     
