@@ -102,18 +102,21 @@ buttonAddToCart.addEventListener("click", function(event){ //type d'événement 
         if( obj.number < quantityValueMin ){ obj.number = quantityValueMin }
     }
 
-    //enregistrement du nouvel objet dans le localStorage.
+    //enregistrement du nouveau panier dans le localStorage.
     function saveObject (cart) {
         //on enregistre dans le localStorage une valeur associée à une clé.
         //sérialisation JSON : on transforme un object complexe en une chaîne de caractères
         //JSON.stringify prend un objet et le transforme en chaîne de caractères
-        localStorage.setItem("obj", JSON.stringify(obj));
+        localStorage.setItem("obj", JSON.stringify(cart));
     }
-    saveObject();
-
+    
     //récupération de l'objet du localStorage grâce à getitem pour ajouter un nouvel objet
     //on récupère l'item qui porte la clé enregistrée : obj
     function getCart () {
+        //on enregistre dans une variable cart ce qu'on a récupéré
+        let cart = localStorage.getItem("obj");
+	    return ( cart == null ) ? [] : JSON.parse(cart)
+        /*
         //on enregistre dans une variable cart ce qu'on a récupéré
         let cart = localStorage.getItem("obj");
         //importation dans le localStorage si le panier est vide
@@ -122,9 +125,10 @@ buttonAddToCart.addEventListener("click", function(event){ //type d'événement 
             //cart.push(obj);//on push l'object dans l'array
         }
         else { //sinon le panier existe déjà
-            return JSON.parse(cart); //JSON.parse prend une chaîne de caractères et le retransforme en objet 
+            eturn JSON.parse(cart); //JSON.parse prend une chaîne de caractères et le retransforme en objet 
         }
         console.table(getCart);
+        */
     }
     
     function addToCart (obj) {
@@ -139,11 +143,11 @@ buttonAddToCart.addEventListener("click", function(event){ //type d'événement 
             obj.number = 1;
             cart.push(obj); //on push l'oject dans l'array
         }
-        saveObject();
+        saveObject(cart);
         console.table(addToCart);
     }
     
-    addToCart();
+    addToCart(obj);
 
 });
 
