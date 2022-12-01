@@ -86,7 +86,7 @@ buttonAddToCart.addEventListener("click", function(event){ //type d'événement 
         number: quantityValue,
     }
     let newObj = [obj];
-    console.log(obj);
+    console.log(newObj);
 
     //Ajout de sécurité avec parseInt, on force la valeur en un entier
     obj.number = parseInt( document.getElementById("quantity").value )
@@ -116,35 +116,24 @@ buttonAddToCart.addEventListener("click", function(event){ //type d'événement 
         //on enregistre dans une variable cart ce qu'on a récupéré
         let cart = localStorage.getItem("obj");
 	    return ( cart == null ) ? [] : JSON.parse(cart)
-        /*
-        //on enregistre dans une variable cart ce qu'on a récupéré
-        let cart = localStorage.getItem("obj");
-        //importation dans le localStorage si le panier est vide
-        if ( cart == null ) { // si le panier n'existe pas
-            cart = []; //création d'un array vide 
-            //cart.push(obj);//on push l'object dans l'array
-        }
-        else { //sinon le panier existe déjà
-            eturn JSON.parse(cart); //JSON.parse prend une chaîne de caractères et le retransforme en objet 
-        }
-        console.table(getCart);
-        */
     }
     
     function addToCart (obj) {
         let cart = getCart(); //on récupère l'object dans le localStorage
         //on cherche dans l'array s'il y a un produit dont l'Id est égal à l'Id de l'objet qu'on veut ajouter
-        let searchId = cart.find(element => element.id == obj.id);
-        console.log(searchId); 
-        if (searchId != undefined) { // s'il est différent de undefined, il existe déjà dans l'array
-            searchId.number++;
+        let searchId = cart.find(element => element.id == obj.id && element.color == obj.color);
+        //console.log(searchId); 
+        if (searchId != undefined) { // trouvé : s'il est différent de undefined, il existe déjà dans l'array
+            //parseFloat(searchId.number) += parseFloat(obj.number);
+            searchId.number = parseFloat(searchId.number) + parseFloat(obj.number);
+            //searchId.number <= quantityValueMax;
         }
         else { // sinon
-            obj.number = 1;
+            obj.number = quantityValue;
             cart.push(obj); //on push l'oject dans l'array
         }
         saveObject(cart);
-        console.table(addToCart);
+        //console.table(addToCart);
     }
     
     addToCart(obj);
