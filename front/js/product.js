@@ -116,6 +116,17 @@ buttonAddToCart.addEventListener("click", function(event){ //type d'événement 
         //on enregistre dans une variable cart ce qu'on a récupéré
         let cart = localStorage.getItem("obj");
 	    return ( cart == null ) ? [] : JSON.parse(cart)
+        /*
+        //structure conditionnelle ternaire équivalente à
+        if( cart == null)
+        {
+            return [] 
+        }
+        else
+        { 
+            return JSON.parse(cart) 
+        }
+        */
     }
     
     function addToCart (obj) {
@@ -124,16 +135,18 @@ buttonAddToCart.addEventListener("click", function(event){ //type d'événement 
         let searchId = cart.find(element => element.id == obj.id && element.color == obj.color);
         //console.log(searchId); 
         if (searchId != undefined) { // trouvé : s'il est différent de undefined, il existe déjà dans l'array
-            //parseFloat(searchId.number) += parseFloat(obj.number);
-            searchId.number = parseFloat(searchId.number) + parseFloat(obj.number);
-            //searchId.number <= quantityValueMax;
+            searchId.number = parseInt(searchId.number) + parseInt(obj.number);
+            if (searchId.number > quantityValueMax) 
+                {searchId.number = quantityValueMax;
+                alert ("Maximum du panier par article de même couleur atteint");
+                };
         }
         else { // sinon
             obj.number = quantityValue;
             cart.push(obj); //on push l'oject dans l'array
         }
         saveObject(cart);
-        //console.table(addToCart);
+        alert("Ajout au panier")
     }
     
     addToCart(obj);
