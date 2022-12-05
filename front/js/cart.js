@@ -2,6 +2,34 @@
 let getCart = JSON.parse (localStorage.getItem("obj"));
 console.table(getCart);
 
+//requêter l'Api pour lui demander l'ensemble des produits
+async function getProducts () {
+    const productDetails = await fetch ("http://localhost:3000/api/products", {
+    method: 'GET',
+    headers: {
+      "Accept" : "application/json"
+    }
+    })
+    .then ((resp) => resp.json())
+    .then ((data) => {
+        console.table(data);
+    })
+    .catch ((error) => {
+        console.log(error);
+    });
+}
+getProducts();
+
+//on cherche dans l'Api les produits dont les id sont égaux aux id des objets qu'on veut insérer
+//on utilise filter pour obtenir plusieurs éléments d'un array qui correspondent à une condition
+function getProductsDetails (getCart) {
+    let arrayObjects = getProducts ();
+    let searchProductsId = arrayObjects.filter(elements => elements.id == id);
+
+}
+
+getProductsDetails(getCart);
+
 //Parcourir le panier récupéré pour insérer chaque élément dans la page panier
 for (let i=0; i < getCart.lenght; i++ ) {
 
@@ -45,7 +73,9 @@ for (let i=0; i < getCart.lenght; i++ ) {
     divContent.appendChild(colorDescription); //divContent ajoute l'enfant couleur à la description dans le DOM
 
     //prix du produit
-
+    let priceDescription = document.createElement("p");
+    //ajout du prix
+    divContent.appendChild(priceDescription); //divContent ajoute l'enfant prix à la description dans le DOM
 }
 
 
