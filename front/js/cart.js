@@ -21,15 +21,17 @@ async function getProducts () {
 getProducts();
 
 //on cherche dans l'Api les produits dont les id sont égaux aux id des objets qu'on veut insérer
-//on utilise filter pour obtenir plusieurs éléments d'un array qui correspondent à une condition
-function getProductsDetails (getCart) {
-    let arrayObjects = getProducts ();
-    let searchProductsId = arrayObjects.filter(elements => elements.id == id);
-
+function getCartDetails (getCart) {
+    let arrayProducts = getProducts (); //on récupère l'ensemble des produits de l'api
+    //on parcourt le panier récupéré pour aller chercher les id égaux aux id des objets dans l'api
+    for (let i=0; i < getCart.lenght; i++) {
+        let searchProductsId = arrayProducts.find(elements => elements.id == id);
+    }
 }
 
-getProductsDetails(getCart);
+getCartDetails(getCart);
 
+//On crée une fonction qui dessine le produit
 //Parcourir le panier récupéré pour insérer chaque élément dans la page panier
 for (let i=0; i < getCart.lenght; i++ ) {
 

@@ -133,7 +133,6 @@ buttonAddToCart.addEventListener("click", function(event){ //type d'événement 
         let cart = getCart(); //on récupère l'object dans le localStorage
         //on cherche dans l'array s'il y a un produit dont l'Id est égal à l'Id de l'objet qu'on veut ajouter
         let searchId = cart.find(element => element.id == obj.id && element.color == obj.color);
-        //console.log(searchId); 
         if (searchId != undefined) { // trouvé : s'il est différent de undefined, il existe déjà dans l'array
             searchId.number = parseInt(searchId.number) + parseInt(obj.number);
             if (searchId.number > quantityValueMax) 
