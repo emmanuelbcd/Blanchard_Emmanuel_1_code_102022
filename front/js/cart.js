@@ -99,32 +99,114 @@ function getOneProduct(id) {
 
 //Form
 
-//on récupère le prénom
-const firstNameInput = document.getElementById("firstName");
-const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
+//on récupère le formulaire saisi par l'utilisateur pour la commande
+let userForm = document.querySelector(".cart__order__form");
+//userForm.firstName
+//userForm.lastName
+//userForm.address
+//userForm.city
+//userForm.email
 
-//on récupère le nom
-const lastNameInput = document.getElementById("lastName");
-const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
-
-//on récupère l'adresse
-const addressInput = document.getElementById("address")
-const addressErrorMsg = document.getElementById("addressErrorMsg");
-
-//on récupère la ville
-const cityInput = document.getElementById("city");
-const cityErrorMsg = document.getElementById("cityErrorMsg");
-
-//on récupère l'e-mail
-const email = document.getElementById("email");
-const emailErrorMsg = document.getElementById("emailErrorMsg");
-
-//on crée les Expressions régulières
+//on crée les expressions régulières
 //pour la validation firstName, lastName et city
-//const letterRegEx = 
+let letterRegEx = new RegExp("^[a-zA-Z ,.'-]+$");
 
 //pour la validation adresse
-//const addressRegEx =
+const addressRegEx = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
 
 //pour la validation email
 const emailRegEx = new RegExp(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/, "gm");
+
+//on écoute la modification du prénom
+userForm.firstName.addEventListener("change", function() { //on écoute le changement et on utilise une fonction de callback pour lui dire quelle action on va devoir utiliser
+    validFirstName(this); //on appelle une fonction qui s'appelle validFirstName avec pour paramètre l'élément qui est écouté
+});
+
+//on crée la fonction validFirstName
+const validFirstName = function (inputFirstName) {
+    let testFirstName = letterRegEx.test(inputFirstName.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
+    let firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
+
+    if(testFirstName){
+        firstNameErrorMsg.textContent = "";
+    }
+    else{
+        firstNameErrorMsg.textContent = "Veuillez renseigner un prénom";
+    }
+};
+
+//on écoute la modification du nom
+userForm.lasttName.addEventListener("change", function() { //on écoute le changement et on utilise une fonction de callback pour lui dire quelle action on va devoir utiliser
+    validLastName(this); //on appelle une fonction qui s'appelle validLastName avec pour paramètre l'élément qui est écouté
+});
+
+//on crée la fonction validLastName
+const validLastName = function (inputLastName) {
+    let testLastName = letterRegEx.test(inputLastName.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
+    let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
+
+    if (testLastName) {
+        lastNameErrorMsg.textContent = "";
+    }
+    else{
+        lastNameErrorMsg.textContent = "Veuillez renseigner un nom";
+    }
+};
+
+//on écoute la modification de l'adresse
+userForm.address.addEventListener("change", function() { //on écoute le changement et on utilise une fonction de callback pour lui dire quelle action on va devoir utiliser
+    validAddress(this); //on appelle une fonction qui s'appelle validAddress avec pour paramètre l'élément qui est écouté
+});
+
+//on crée la fonction validAddress
+const validAddress = function (inputAddress) {
+    let testAddress = addressRegEx.test(inputAddress.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
+    let addressErrorMsg = document.getElementById("addressErrorMsg");
+
+    if (testAddress) { //true
+        addressErrorMsg.textContent = "";
+    }
+    else{ //false
+        addressErrorMsg.textContent = "Veuillez renseigner une adresse"
+    }
+};
+
+//on écoute la modification de la ville
+userForm.address.addEventListener("change", function() { //on écoute le changement et on utilise une fonction de callback pour lui dire quelle action on va devoir utiliser
+    validAddress(this); //on appelle une fonction qui s'appelle validAddress avec pour paramètre l'élément qui est écouté
+});
+
+//on crée la fonction validCity
+const validCity = function (inputCity) {
+    let testCity = letterRegEx.test(inputCity.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
+    let cityErrorMsg = document.getElementById("cityErrorMsg");
+
+    if (testCity) { //true
+        cityErrorMsg.textContent= "";
+    }
+    else { //false
+        cityErrorMsg.textContent = "Veuillez renseigner une ville";
+    }
+};
+
+//on écoute la modification de l'e-mail
+userForm.email.addEventListener("change", function() { //on écoute le changement et on utilise une fonction de callback pour lui dire quelle action on va devoir utiliser
+    validEmail(this); //on appelle une fonction qui s'appelle validEmail avec pour paramètre l'élément qui est écouté
+});
+
+//on crée la fonction validEmail
+const validEmail = function (inputEmail) {
+    let testEmail = emailRegEx.test(inputEmail.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
+    let emailErrorMsg = document.getElementById("emailErrorMsg");
+
+    if (testEmail) { //true
+        emailErrorMsg.textContent = "";
+    }
+    else { //false
+        emailErrorMsg.textContent = "Veuillez renseigner votre email"
+    }
+}
+
+
+
+
