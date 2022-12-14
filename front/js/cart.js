@@ -29,10 +29,9 @@ getProducts();
 //    }
 //}
 
-//getCartDetails(getCart);
+//function getCartDetails(getCart) {
 
 for (let i=0, i2 = getCart.length; i < i2; i++) { //on initialise 2 variables pour cette boucle
-    console.log(getCart[i], getCart[i2]);
     let product = getOneProduct(getCart[i].id) //on va chercher le produit
     if (product != undefined) { //trouvé : s'il est différent de undefined, il existe déjà dans l'array
         //on dessine le produit
@@ -81,24 +80,51 @@ for (let i=0, i2 = getCart.length; i < i2; i++) { //on initialise 2 variables po
         divContent.appendChild(priceDescription); //divContent ajoute l'enfant prix à la description dans le DOM
     }
 }
-
+//}
 const products = getProducts(); //
 
 function getOneProduct(id) {
     let searchProductsId = []; // On déclare la variable une fois, on dit que c'est un tableau.
-    //for (let i=0; i < getCart.length; i++)
-    //{
+    for (let i=0; i < getCart.length; i++)
+    {
         check = products.find(elements => elements.id == id); // on pourrait ne pas trouver l'id...
-        if( check != undefined ) // Du coup, on teste et si c'est trouvé
+        if( check != undefined ) // on teste et si c'est trouvé
         {
             searchProductsId.push( check ) // on pousse dans le tableau.
         }
-    //}
+    }
     return searchProductsId
 }
 
 
+//Form
 
+//on récupère le prénom
+const firstNameInput = document.getElementById("firstName");
+const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
 
+//on récupère le nom
+const lastNameInput = document.getElementById("lastName");
+const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
 
+//on récupère l'adresse
+const addressInput = document.getElementById("address")
+const addressErrorMsg = document.getElementById("addressErrorMsg");
 
+//on récupère la ville
+const cityInput = document.getElementById("city");
+const cityErrorMsg = document.getElementById("cityErrorMsg");
+
+//on récupère l'e-mail
+const email = document.getElementById("email");
+const emailErrorMsg = document.getElementById("emailErrorMsg");
+
+//on crée les Expressions régulières
+//pour la validation firstName, lastName et city
+//const letterRegEx = 
+
+//pour la validation adresse
+//const addressRegEx =
+
+//pour la validation email
+const emailRegEx = new RegExp(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/, "gm");
