@@ -27,20 +27,23 @@ async function getProducts () {
     .then ((resp) => resp.json())
     .then ((data) => {
         console.table(data);
+        draw(data); //on lance draw et on passe data en paramètre
     })
     .catch ((error) => {
         console.log(error);
     });
 }
 
-let apiProducts = getProducts();
+//on retire le nom de variable qui ne sert à rien
+getProducts();
 
-draw(); //on appelle la fonction draw
-
-function draw() {
+//on ajoute products en paramètre
+function draw(products) {
     for(let i=0, i2= getCart.length; i<i2; i++)//on boucle les produits du localstorage sans recalculer systématiquement la longueur grâce à i2
     {
-        let product = getProductById (getCart[i].id); //on enregistre dans product le produit qu'on est allé chercher par l'id
+        //Modif: le find directement ici
+        //let product = getProductById (getCart[i].id); //on enregistre dans product le produit qu'on est allé chercher par l'id
+        let product = products.find( element => element._id == getCart[i].id )
         drawProduct(product); // on appelle la fonction qui dessine le produit
     }
 }
@@ -60,10 +63,10 @@ function drawProduct (product) {
     article.appendChild(divImageElement); //article ajoute l'enfant divImageElement dans le DOM
 
     //image du produit
-    //let imageElement = document.createElement("img");
-    //imageElement.src = product.imageUrl; // source de l'image
-    //imageElement.alt = product.altTxt; // texte alternatif de l'image
-    //divImageElement.appendChild(imageElement); //divImageElement ajoute l'enfant imageElement dans le DOM
+    let imageElement = document.createElement("img");
+    imageElement.src = product.imageUrl; // source de l'image
+    imageElement.alt = product.altTxt; // texte alternatif de l'image
+    divImageElement.appendChild(imageElement); //divImageElement ajoute l'enfant imageElement dans le DOM
 
     //div parent pour le contenu : div enfants description et réglages (settings)
     //div parent pour le contenu
@@ -91,11 +94,6 @@ function drawProduct (product) {
     //ajout du prix
     divContent.appendChild(priceDescription); //divContent ajoute l'enfant prix à la description dans le DOM
 }
-
-function getProductById(productId) {
-    //faire une fonction find
-}
-
 
 //On crée une fonction qui récupère le formulaire saisi par l'utilisateur pour sa commande
 function getForm() {
