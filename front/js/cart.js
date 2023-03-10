@@ -1,5 +1,5 @@
 //Récupération du panier
-//let getCart = JSON.parse (localStorage.getItem("obj"));
+//la fonction getLocalStorage récupère les données stockées dans le navigateur sous la clé "obj"
 function getLocalStorage () {
     let cart = localStorage.getItem("obj");
     if( cart == null)
@@ -12,8 +12,9 @@ function getLocalStorage () {
     }
     
 }
-let getCart = getLocalStorage ();
-console.table(getCart);
+let getCart = getLocalStorage (); //on stocke les données récupérées depuis la fonction getLocalStorage
+console.log('getCart'); //on affiche la variable getCart
+console.table(getCart); //sous forme de tableau
 
 
 //requêter l'Api pour lui demander l'ensemble des produits
@@ -26,36 +27,39 @@ async function getProducts () {
     })
     .then ((resp) => resp.json())
     .then ((data) => {
-        console.table(data);
-        draw(data); //on lance draw et on passe data en paramètre
+        console.log('données API') //on affiche data, les données retournées par l'API
+        console.table(data); //ous forme de tableau
+        draw(data); //on appelle draw et on passe data en paramètre
     })
     .catch ((error) => {
         console.log(error);
     });
 }
 
-//on retire le nom de variable qui ne sert à rien
+//on appelle getProducts
 getProducts();
 
-//on ajoute products en paramètre
+//la fonction draw itère sur chaque élément de getCart 
+//et recherche l'élément correspondant dans la liste de produits passée en paramètre (products)
 function draw(products) {
     for(let i=0, i2= getCart.length; i<i2; i++)//on boucle les produits du localstorage sans recalculer systématiquement la longueur grâce à i2
     {
-        //Modif: le find directement ici
-        //let product = getProductById (getCart[i].id); //on enregistre dans product le produit qu'on est allé chercher par l'id
-        let product = products.find( element => element._id == getCart[i].id )
+        let product = products.find( element => element._id == getCart[i].id ) //on stocke dans product le produit qu'on est allé cherché
+        product.color = getCart[i].color
         drawProduct(product); // on appelle la fonction qui dessine le produit
     }
 }
 
 //on dessine le produit
 function drawProduct (product) {
+    console.log('drawProduct');
+    console.log(product);
     //article
     let sectionCartItems = document.getElementById("cart__items"); //Récupération de l'élément du DOM
-    let article = document.createElement ("article"); //on crée 
+    let article = document.createElement ("article"); //on crée un nouvel élément qui est stocké dans la variable article.
     sectionCartItems.appendChild(article); //SectionCartItems ajoute l'enfant article dans le DOM
     article.className = "cart__item"; //className est utilisé au lieu de class à cause d'éventuels conflits avec le mot-clé class
-    article.setAttribute("data-id", product); //nom et valeur attribués
+    article.setAttribute("data-id", product._id); //nom et valeur attribués
 
     //div pour l'image du produit
     let divImageElement = document.createElement ("div");
@@ -86,14 +90,16 @@ function drawProduct (product) {
 
     //couleur du produit
     let colorDescription = document.createElement("p");
-    colorDescription.textContent = product.colorValue;
-    divContent.appendChild(colorDescription); //divContent ajoute l'enfant couleur à la description dans le DOM
+    colorDescription.textContent = product.color;
+    description.appendChild(colorDescription); //on ajoute l'enfant couleur à la description dans le DOM
 
     //prix du produit
     let priceDescription = document.createElement("p");
+    priceDescription.textContent = product.price + "€";
     //ajout du prix
-    divContent.appendChild(priceDescription); //divContent ajoute l'enfant prix à la description dans le DOM
+    description.appendChild(priceDescription); //on ajoute l'enfant prix à la description dans le DOM
 }
+
 
 //On crée une fonction qui récupère le formulaire saisi par l'utilisateur pour sa commande
 function getForm() {
