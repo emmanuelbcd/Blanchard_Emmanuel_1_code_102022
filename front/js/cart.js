@@ -28,7 +28,7 @@ async function getProducts () {
     .then ((resp) => resp.json())
     .then ((data) => {
         console.log('données API') //on affiche data, les données retournées par l'API
-        console.table(data); //ous forme de tableau
+        console.table(data); //sous forme de tableau
         draw(data); //on appelle draw et on passe data en paramètre
     })
     .catch ((error) => {
@@ -45,7 +45,7 @@ function draw(products) {
     for(let i=0, i2= getCart.length; i<i2; i++)//on boucle les produits du localstorage sans recalculer systématiquement la longueur grâce à i2
     {
         let product = products.find( element => element._id == getCart[i].id ) //on stocke dans product le produit qu'on est allé cherché
-        product.color = getCart[i].color
+        product.color = getCart[i].color;
         drawProduct(product); // on appelle la fonction qui dessine le produit
     }
 }
@@ -95,9 +95,43 @@ function drawProduct (product) {
 
     //prix du produit
     let priceDescription = document.createElement("p");
-    priceDescription.textContent = product.price + "€";
+    priceDescription.textContent = product.price + " €";
     //ajout du prix
     description.appendChild(priceDescription); //on ajoute l'enfant prix à la description dans le DOM
+
+    //div parent pour les réglages (settings)
+    let settings = document.createElement("div");
+    settings.className = "cart__item__content__settings"; //className est utilisé au lieu de class à cause d'éventuels conflits avec le mot-clé class
+    divContent.appendChild(settings); //divContent ajoute l'enfant settings dans le DOM
+
+    //div pour les réglages de la quantité (settings quantity)
+    let settingsQuantity = document.createElement("div");
+    settingsQuantity.className = "cart__item__content__settings__quantity"; //className est utilisé au lieu de class à cause d'éventuels conflits avec le mot-clé class
+    settings.appendChild(settingsQuantity); //divContent ajoute l'enfant settingsQuantity dans le DOM
+
+    //Quantité du produit
+    let quantityInCart = document.createElement("p");
+    quantityInCart.textContent = "Qté : ";
+    settingsQuantity.appendChild(quantityInCart);
+
+    //Quantité du produit input
+    let input = document.createElement("input");
+    //itemQuantity.className = "itemQuantity"; //className est utilisé au lieu de class à cause d'éventuels conflits avec le mot-clé class
+    //settingsQuantity.appendChild(itemQuantity);
+    input.className = "itemQuantity"; //className est utilisé au lieu de class à cause d'éventuels conflits avec le mot-clé class
+    input.setAttribute("itemQuantity", "number");
+
+    //div pour la suppression de la quantité du produit
+    let divDelete = document.createElement("div");
+    divDelete.className = "cart__item__content__settings__delete";
+    settings.appendChild(divDelete);
+
+    //suppression du produit
+    let deleteItem = document.createElement("p");
+    deleteItem.className = "deleteItem";
+    deleteItem.textContent = "Supprimer";
+    divDelete.appendChild(deleteItem);
+
 }
 
 
