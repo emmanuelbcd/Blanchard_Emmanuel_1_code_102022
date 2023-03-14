@@ -16,7 +16,6 @@ let getCart = getLocalStorage (); //on stocke les données récupérées depuis 
 console.log('getCart'); //on affiche la variable getCart
 console.table(getCart); //sous forme de tableau
 
-
 //requêter l'Api pour lui demander l'ensemble des produits
 async function getProducts () {
     const productDetails = await fetch ("http://localhost:3000/api/products", {
@@ -46,6 +45,7 @@ function draw(products) {
     {
         let product = products.find( element => element._id == getCart[i].id ) //on stocke dans product le produit qu'on est allé cherché
         product.color = getCart[i].color;
+        product.number = getCart[i].number;
         drawProduct(product); // on appelle la fonction qui dessine le produit
     }
 }
@@ -96,7 +96,6 @@ function drawProduct (product) {
     //prix du produit
     let priceDescription = document.createElement("p");
     priceDescription.textContent = product.price + " €";
-    //ajout du prix
     description.appendChild(priceDescription); //on ajoute l'enfant prix à la description dans le DOM
 
     //div parent pour les réglages (settings)
@@ -115,11 +114,14 @@ function drawProduct (product) {
     settingsQuantity.appendChild(quantityInCart);
 
     //Quantité du produit input
-    let input = document.createElement("input");
-    //itemQuantity.className = "itemQuantity"; //className est utilisé au lieu de class à cause d'éventuels conflits avec le mot-clé class
-    //settingsQuantity.appendChild(itemQuantity);
-    input.className = "itemQuantity"; //className est utilisé au lieu de class à cause d'éventuels conflits avec le mot-clé class
-    input.setAttribute("itemQuantity", "number");
+    let inputQuantity = document.createElement("input");
+    inputQuantity.className = "itemQuantity"; //className est utilisé au lieu de class à cause d'éventuels conflits avec le mot-clé class
+    inputQuantity.setAttribute("type", "number");
+    inputQuantity.setAttribute("name", "itemQuantity");
+    inputQuantity.setAttribute("min", "1");
+    inputQuantity.setAttribute("max", "100");
+    inputQuantity.setAttribute("value", product.number);
+    settingsQuantity.appendChild(inputQuantity);
 
     //div pour la suppression de la quantité du produit
     let divDelete = document.createElement("div");
