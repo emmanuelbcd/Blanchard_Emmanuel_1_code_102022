@@ -41,13 +41,16 @@ getProducts();
 //la fonction draw itère sur chaque élément de getCart 
 //et recherche l'élément correspondant dans la liste de produits passée en paramètre (products)
 function draw(products) {
+    let totalQuantity = 0; //on initialise la variable totalQuantity à 0
     for(let i=0, i2= getCart.length; i<i2; i++)//on boucle les produits du localstorage sans recalculer systématiquement la longueur grâce à i2
     {
         let product = products.find( element => element._id == getCart[i].id ) //on stocke dans product le produit qu'on est allé cherché
         product.color = getCart[i].color;
         product.number = getCart[i].number;
         drawProduct(product); // on appelle la fonction qui dessine le produit
+        totalQuantity += product.number; // on ajoute la quantité de l'élément actuel à totalQuantity
     }
+    cartQuantity(totalQuantity); // on met à jour le nombre d'articles affichés dans le panier
 }
 
 //on dessine le produit
@@ -136,6 +139,13 @@ function drawProduct (product) {
 
 }
 
+//on calcule la quantité totale de produits dans le panier
+function cartQuantity(totalQuantity) {
+    console.log('Quantité totale au panier');
+    let elementQuantity = document.getElementById("totalQuantity");
+    elementQuantity.textContent = totalQuantity;
+    console.log(quantityTotalValue);
+}
 
 //On crée une fonction qui récupère le formulaire saisi par l'utilisateur pour sa commande
 function getForm() {
