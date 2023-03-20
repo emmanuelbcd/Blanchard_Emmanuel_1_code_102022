@@ -144,7 +144,7 @@ function cartQuantity(totalQuantity) {
     console.log('Quantité totale au panier');
     let elementQuantity = document.getElementById("totalQuantity");
     elementQuantity.textContent = totalQuantity;
-    console.log(quantityTotalValue);
+    console.log(totalQuantity);
 }
 
 //On crée une fonction qui récupère le formulaire saisi par l'utilisateur pour sa commande
