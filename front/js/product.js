@@ -75,9 +75,9 @@ buttonAddToCart.addEventListener("click", function(event){ //type d'événement 
     //Récupération de l'input quantity
     const quantitySelect = document.getElementById("quantity");
     //Récupération de la quantité choisie par l'utilisateur
-    let quantityValue = quantitySelect.value; // valeur
-    let quantityValueMax = quantitySelect.max; // valeur max 
-    let quantityValueMin = quantitySelect.min; //valeur min 
+    let quantityValue = parseInt(quantitySelect.value); // on convertit la valeur en nombre entier
+    let quantityValueMax = parseInt(quantitySelect.max); // on convertit la valeur max en nombre entier 
+    let quantityValueMin = parseInt(quantitySelect.min); //on convertit la valeur min en nombre entier 
 
     //Création d'un objet qui récupère les paramètres pour l'envoyer dans le localStorage
     let obj = {
@@ -148,6 +148,7 @@ buttonAddToCart.addEventListener("click", function(event){ //type d'événement 
         alert("Ajout au panier")
     }
     
+    // on appelle la fonction qui ajoute l'objet au panier et enregistre dans le localStorage
     addToCart(obj);
 
 });
