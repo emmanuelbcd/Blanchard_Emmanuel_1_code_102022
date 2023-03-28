@@ -13,7 +13,7 @@ function getLocalStorage () {
     
 }
 let getCart = getLocalStorage (); //on stocke les données récupérées depuis la fonction getLocalStorage
-console.log('getCart'); //on affiche la variable getCart
+console.log('LocalStorage ou panier'); //on affiche la variable getCart
 console.table(getCart); //sous forme de tableau
 
 //requêter l'Api pour lui demander l'ensemble des produits
@@ -42,7 +42,7 @@ getProducts();
 //et recherche l'élément correspondant dans la liste de produits passée en paramètre (products)
 function draw(products) {
     let totalQuantity = 0; //on initialise la variable totalQuantity à 0
-    let totalPrice = 0;
+    let totalPrice = 0; //on initiaise la variable totalPrice à 0
     for(let i=0, i2= getCart.length; i<i2; i++)//on boucle les produits du localstorage sans recalculer systématiquement la longueur grâce à i2
     {
         let product = products.find( element => element._id == getCart[i].id ) //on stocke dans product le produit qu'on est allé cherché
@@ -53,13 +53,15 @@ function draw(products) {
         totalPrice += product.number * product.price;
     }
     cartQuantity(totalQuantity); // on met à jour le nombre d'articles affichés dans le panier
-    cartPrice(totalPrice);
+    cartPrice(totalPrice); // on met à jour le prix total affiché dans le panier
+
 }
 
 //on dessine le produit
 function drawProduct (product) {
     console.log('drawProduct');
     console.log(product);
+
     //article
     let sectionCartItems = document.getElementById("cart__items"); //Récupération de l'élément du DOM
     let article = document.createElement ("article"); //on crée un nouvel élément qui est stocké dans la variable article.
@@ -129,6 +131,49 @@ function drawProduct (product) {
     inputQuantity.setAttribute("value", product.number);
     settingsQuantity.appendChild(inputQuantity);
 
+     //Récupération de la quantité choisie par l'utilisateur
+    let valueMax = parseInt(inputQuantity.max); //on convertit la valeur max en un entier
+    let valueMin = parseInt(inputQuantity.min); //on convertit la valeur min en un entier 
+    
+    //Ajout d'un écouteur d'événement au changement de la quantité
+    inputQuantity.addEventListener("change", function (event) { // l'écouteur se déclenche lorsqu'il y a un changement de quantité
+        let newQuantity = parseInt(event.target.value); // on convertit la nouvelle quantité entrée par l'utilisateur en un entier
+        let productId = article.getAttribute("data-id"); //on récupère l'ientifiant du produit correspondant à l'élément HTML en utilisant l'attribut data-id de l'article parent
+        let productColor = product.color;
+
+        //Pour contrer les rigolos qui auraient passé autre chose, on vérifie si la nouvelle valeur n'est pas un nombre
+        if( isNaN( parseInt(newQuantity) )) { 
+            newQuantity = valueMin; //on convertit à min
+        }
+        else
+        {
+            //on recadre les valeurs si elles sont hors champs
+            if( newQuantity < valueMin ) { newQuantity = valueMin }
+            if( newQuantity > valueMax ) { newQuantity = valueMax }
+        }
+
+        //modification de la quantité du produit correspondant dans le panier
+        let cartIndex = getCart.findIndex( (item) => item.id === productId && item.color === productColor ); //on recherche l'élément dont l'id et la color correspondent à ceux modifiés
+        if (cartIndex > -1) { //si on trouve cet élément
+            getCart[cartIndex].number = newQuantity; //on modifie sa propriété number avec la nouvelle quantité saisie par l'utilisateur
+            localStorage.setItem("obj", JSON.stringify(getCart)); //on met à jour le localstorage avec la nouvelle valeur du panier en  utilisant setItem
+            // on met à jour le prix total et la quantité totale affichés dans le panier
+            let totalQuantity = 0;
+            let totalPrice = 0;
+            for (let i=0, i2= getCart.length; i<i2; i++) {
+              const cartItem = getCart[i];
+              const product = products.find((element) => element._id === cartItem.id);
+              product.color = cartItem.color;
+              product.number = cartItem.number;
+              totalQuantity += product.number;
+              totalPrice += product.number * product.price;
+            }
+            cartQuantity(totalQuantity);
+            cartPrice(totalPrice);
+          }
+
+    });
+
     //div pour la suppression de la quantité du produit
     let divDelete = document.createElement("div");
     divDelete.className = "cart__item__content__settings__delete";
@@ -145,17 +190,17 @@ function drawProduct (product) {
 //on calcule la quantité totale de produits dans le panier
 function cartQuantity(totalQuantity) {
     console.log('Quantité totale au panier');
+    console.log(totalQuantity);
     let elementQuantity = document.getElementById("totalQuantity");
     elementQuantity.textContent = totalQuantity;
-    console.log(totalQuantity);
 }
 
 //on clacule le prix total des produits dans le panier
 function cartPrice(totalPrice) {
     console.log('Prix total');
+    console.log(totalPrice);
     let elementPrice = document.getElementById("totalPrice");
     elementPrice.textContent = totalPrice;
-    console.log(totalPrice);
 }
 
 //On crée une fonction qui récupère le formulaire saisi par l'utilisateur pour sa commande
