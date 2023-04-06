@@ -16,6 +16,7 @@ let getCart = getLocalStorage (); //on stocke les données récupérées depuis 
 console.log('LocalStorage ou panier'); //on affiche la variable getCart
 console.table(getCart); //sous forme de tableau
 
+
 //requêter l'Api pour lui demander l'ensemble des produits
 async function getProducts () {
     const productDetails = await fetch ("http://localhost:3000/api/products", {
@@ -28,6 +29,7 @@ async function getProducts () {
     .then ((data) => {
         console.log('données API') //on affiche data, les données retournées par l'API
         console.table(data); //sous forme de tableau
+        products = data;
         draw(data); //on appelle draw et on passe data en paramètre
     })
     .catch ((error) => {
@@ -35,22 +37,28 @@ async function getProducts () {
     });
 }
 
+
+var products = {};
 //on appelle getProducts
 getProducts();
 
 //la fonction draw itère sur chaque élément de getCart 
 //et recherche l'élément correspondant dans la liste de produits passée en paramètre (products)
 function draw(products) {
+    console.log('draw');
+    console.log(products);
     let totalQuantity = 0; //on initialise la variable totalQuantity à 0
     let totalPrice = 0; //on initiaise la variable totalPrice à 0
     for(let i=0, i2= getCart.length; i<i2; i++)//on boucle les produits du localstorage sans recalculer systématiquement la longueur grâce à i2
     {
         let product = products.find( element => element._id == getCart[i].id ) //on stocke dans product le produit qu'on est allé cherché
-        product.color = getCart[i].color;
+        if(product) {
+            product.color = getCart[i].color;
         product.number = getCart[i].number;
         drawProduct(product); // on appelle la fonction qui dessine le produit
         totalQuantity += product.number; // on ajoute la quantité de l'élément actuel à totalQuantity
         totalPrice += product.number * product.price;
+        }
     }
     cartQuantity(totalQuantity); // on met à jour le nombre d'articles affichés dans le panier
     cartPrice(totalPrice); // on met à jour le prix total affiché dans le panier
@@ -136,9 +144,9 @@ function drawProduct (product) {
     let valueMin = parseInt(inputQuantity.min); //on convertit la valeur min en un entier 
     
     //Ajout d'un écouteur d'événement au changement de la quantité
-    inputQuantity.addEventListener("change", function (event) { // l'écouteur se déclenche lorsqu'il y a un changement de quantité
+    inputQuantity.addEventListener("input", function (event) { // l'écouteur se déclenche lorsqu'il y a un changement de quantité
         let newQuantity = parseInt(event.target.value); // on convertit la nouvelle quantité entrée par l'utilisateur en un entier
-        let productId = article.getAttribute("data-id"); //on récupère l'ientifiant du produit correspondant à l'élément HTML en utilisant l'attribut data-id de l'article parent
+        let productId = article.getAttribute("data-id"); //on récupère l'identifiant du produit correspondant à l'élément HTML en utilisant l'attribut data-id de l'article parent
         let productColor = product.color;
 
         //Pour contrer les rigolos qui auraient passé autre chose, on vérifie si la nouvelle valeur n'est pas un nombre
@@ -171,7 +179,6 @@ function drawProduct (product) {
             cartQuantity(totalQuantity);
             cartPrice(totalPrice);
           }
-
     });
 
     //div pour la suppression de la quantité du produit
@@ -185,6 +192,40 @@ function drawProduct (product) {
     deleteItem.textContent = "Supprimer";
     divDelete.appendChild(deleteItem);
 
+    
+        //ajout d'un écouteur d'événement au clic
+        deleteItem.addEventListener("click", function(event) {
+            //on récupère l'élément parent qui contient l'id et la couleur du produit à supprimer
+            let parent = event.target.closest(".cart__item");
+            let id = parent.dataset.id;
+            let color = parent.dataset.color;
+
+            //on supprime le produit du panier en utilisant son id et sa couleur
+            let cart = getLocalStorage ();
+            let newCart = cart.filter(item => !(item.id === id & item.color === color));
+            localStorage.setItem("obj", JSON.stringify(newCart));
+            
+            //on supprime l'élément HTML qui correspond au produit supprimé
+            parent.remove();
+
+            //on met à jour le nbre d'articles et le prix total affichés dans le panier
+            let totalQuantity = 0;
+            let totalPrice = 0;
+            for(let i = 0; i < newCart.length; i++) {
+            let product = products.find(element => element._id === newCart[i].id);
+                if(product) {
+                    product.color = newCart[i].color;
+                    product.number = newCart[i].number;
+                    totalQuantity += product.number;
+                    totalPrice += product.number * product.price;
+                }
+            }
+            cartQuantity(totalQuantity);
+            cartPrice(totalPrice);
+
+        });
+    
+    
 }
 
 //on calcule la quantité totale de produits dans le panier
@@ -195,7 +236,7 @@ function cartQuantity(totalQuantity) {
     elementQuantity.textContent = totalQuantity;
 }
 
-//on clacule le prix total des produits dans le panier
+//on calcule le prix total des produits dans le panier
 function cartPrice(totalPrice) {
     console.log('Prix total');
     console.log(totalPrice);
