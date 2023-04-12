@@ -107,6 +107,7 @@ function drawProduct (product) {
     //couleur du produit
     let colorDescription = document.createElement("p");
     colorDescription.textContent = product.color;
+    article.setAttribute("data-color", product.color);
     description.appendChild(colorDescription); //on ajoute l'enfant couleur à la description dans le DOM
 
     //prix du produit
@@ -209,25 +210,33 @@ function drawProduct (product) {
         console.log(deleteColor);
 
         //on trouve l'indice du produit à supprimer dans le panier
-        //let productIndex = getCart.findIndex(itemToDelete => itemToDelete.id === id && itemToDelete.color === color);
-        //console.log(productIndex);
+        let productIndex = getCart.findIndex(itemToDelete => itemToDelete.id === deleteId && itemToDelete.color === deleteColor);
+        console.log(productIndex);
         
-
         // Si l'article est dans le panier, on le supprime
-        //if (productIndex > -1) {
-            
+        if (productIndex !== -1) {
+            getCart.splice(productIndex, 1);
     
             //on met à jour le panier localStorage en  utilisant setItem
-            //localStorage.setItem("obj", JSON.stringify(getCart)); 
+            localStorage.setItem("obj", JSON.stringify(getCart)); 
     
             //on met à jour le nombre d'articles dans le panier
             //on met à jour le prix total du panier
-            
-        //}
+            let totalQuantity = 0;
+            let totalPrice = 0;
+            for(let i=0, i2= getCart.length; i<i2; i++) {
+                let product = products.find( element => element._id == getCart[i].id )
+                if(product) {
+                    totalQuantity += getCart[i].number;
+                    totalPrice += getCart[i].number * product.price;
+                }
+            }
+            cartQuantity(totalQuantity); 
+            cartPrice(totalPrice);   
+        }
     });
      
 }
-
 
 //on calcule la quantité totale de produits dans le panier
 function cartQuantity(totalQuantity) {
