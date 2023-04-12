@@ -54,10 +54,10 @@ function draw(products) {
         let product = products.find( element => element._id == getCart[i].id ) //on stocke dans product le produit qu'on est allé cherché
         if(product) {
             product.color = getCart[i].color;
-        product.number = getCart[i].number;
-        drawProduct(product); // on appelle la fonction qui dessine le produit
-        totalQuantity += product.number; // on ajoute la quantité de l'élément actuel à totalQuantity
-        totalPrice += product.number * product.price;
+            product.number = getCart[i].number;
+            drawProduct(product); // on appelle la fonction qui dessine le produit
+            totalQuantity += product.number; // on ajoute la quantité de l'élément actuel à totalQuantity
+            totalPrice += product.number * product.price;
         }
     }
     cartQuantity(totalQuantity); // on met à jour le nombre d'articles affichés dans le panier
@@ -192,41 +192,42 @@ function drawProduct (product) {
     deleteItem.textContent = "Supprimer";
     divDelete.appendChild(deleteItem);
 
-    
-        //ajout d'un écouteur d'événement au clic
-        deleteItem.addEventListener("click", function(event) {
-            //on récupère l'élément parent qui contient l'id et la couleur du produit à supprimer
-            let parent = event.target.closest(".cart__item");
-            let id = parent.dataset.id;
-            let color = parent.dataset.color;
+    //on supprime le produit
+    deleteItem.addEventListener("click", function(event) {
+        console.log("clic sur le bouton de suppression d'un produit");
+       
+        //on trouve le produit à supprimer dans le DOM
+        let parent = event.target.closest(".cart__item");
 
-            //on supprime le produit du panier en utilisant son id et sa couleur
-            let cart = getLocalStorage ();
-            let newCart = cart.filter(item => !(item.id === id & item.color === color));
-            localStorage.setItem("obj", JSON.stringify(newCart));
+        //on supprime le produit du DOM
+        parent.remove();
+
+        //on trouve l'id et la couleur du produit à supprimer
+        let deleteId = parent.dataset.id;
+        console.log(deleteId);
+        let deleteColor = parent.dataset.color;
+        console.log(deleteColor);
+
+        //on trouve l'indice du produit à supprimer dans le panier
+        //let productIndex = getCart.findIndex(itemToDelete => itemToDelete.id === id && itemToDelete.color === color);
+        //console.log(productIndex);
+        
+
+        // Si l'article est dans le panier, on le supprime
+        //if (productIndex > -1) {
             
-            //on supprime l'élément HTML qui correspond au produit supprimé
-            parent.remove();
-
-            //on met à jour le nbre d'articles et le prix total affichés dans le panier
-            let totalQuantity = 0;
-            let totalPrice = 0;
-            for(let i = 0; i < newCart.length; i++) {
-            let product = products.find(element => element._id === newCart[i].id);
-                if(product) {
-                    product.color = newCart[i].color;
-                    product.number = newCart[i].number;
-                    totalQuantity += product.number;
-                    totalPrice += product.number * product.price;
-                }
-            }
-            cartQuantity(totalQuantity);
-            cartPrice(totalPrice);
-
-        });
     
+            //on met à jour le panier localStorage en  utilisant setItem
+            //localStorage.setItem("obj", JSON.stringify(getCart)); 
     
+            //on met à jour le nombre d'articles dans le panier
+            //on met à jour le prix total du panier
+            
+        //}
+    });
+     
 }
+
 
 //on calcule la quantité totale de produits dans le panier
 function cartQuantity(totalQuantity) {
