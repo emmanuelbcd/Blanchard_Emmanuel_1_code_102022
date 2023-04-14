@@ -258,21 +258,16 @@ function cartPrice(totalPrice) {
 function getForm() {
     //on récupère le formulaire saisi par l'utilisateur pour la commande
     let userForm = document.querySelector(".cart__order__form");
-    //userForm.firstName
-    //userForm.lastName
-    //userForm.address
-    //userForm.city
-    //userForm.email
 
     //on crée les expressions régulières
     //pour la validation firstName, lastName et city
-    let letterRegEx = new RegExp("^[a-zA-Z ,.'-]+$", "gm");
+    let letterRegEx = new RegExp("^[a-zA-Z ,.'-]+$", "g");
 
     //pour la validation adresse
-    const addressRegEx = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+", "gm");
+    const addressRegEx = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+", "g");
 
     //pour la validation email
-    const emailRegEx = new RegExp(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/, "gm");
+    const emailRegEx = new RegExp(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/, "g");
 
     //on écoute la modification du prénom
     userForm.firstName.addEventListener("change", function() { //on écoute le changement et on utilise une fonction de callback pour lui dire quelle action on va devoir utiliser
@@ -288,12 +283,13 @@ function getForm() {
             firstNameErrorMsg.textContent = "";
         }
         else{
-            firstNameErrorMsg.textContent = "Veuillez renseigner un prénom";
+            firstNameErrorMsg.textContent = "Veuillez renseigner un prénom valide";
         }
+        console.log(testFirstName);
     };
 
     //on écoute la modification du nom
-    userForm.lasttName.addEventListener("change", function() { //on écoute le changement et on utilise une fonction de callback pour lui dire quelle action on va devoir utiliser
+    userForm.lastName.addEventListener("change", function() { //on écoute le changement et on utilise une fonction de callback pour lui dire quelle action on va devoir utiliser
         validLastName(this); //on appelle une fonction qui s'appelle validLastName avec pour paramètre l'élément qui est écouté
     });
 
@@ -306,8 +302,9 @@ function getForm() {
             lastNameErrorMsg.textContent = "";
         }
         else{
-            lastNameErrorMsg.textContent = "Veuillez renseigner un nom";
+            lastNameErrorMsg.textContent = "Veuillez renseigner un nom valide";
         }
+        console.log(testLastName);
     };
 
     //on écoute la modification de l'adresse
@@ -324,12 +321,13 @@ function getForm() {
             addressErrorMsg.textContent = "";
         }
         else{ //false
-            addressErrorMsg.textContent = "Veuillez renseigner une adresse"
+            addressErrorMsg.textContent = "Veuillez renseigner une adresse valide";
         }
+        console.log(testAddress);
     };
 
     //on écoute la modification de la ville
-    userForm.address.addEventListener("change", function() { //on écoute le changement et on utilise une fonction de callback pour lui dire quelle action on va devoir utiliser
+    userForm.city.addEventListener("change", function() { //on écoute le changement et on utilise une fonction de callback pour lui dire quelle action on va devoir utiliser
         validAddress(this); //on appelle une fonction qui s'appelle validAddress avec pour paramètre l'élément qui est écouté
     });
 
@@ -342,8 +340,9 @@ function getForm() {
             cityErrorMsg.textContent= "";
         }
         else { //false
-            cityErrorMsg.textContent = "Veuillez renseigner une ville";
+            cityErrorMsg.textContent = "Veuillez renseigner une ville valide";
         }
+        console.log(testCity);
     };
 
     //on écoute la modification de l'e-mail
@@ -360,10 +359,13 @@ function getForm() {
             emailErrorMsg.textContent = "";
         }
         else { //false
-            emailErrorMsg.textContent = "Veuillez renseigner votre email"
+            emailErrorMsg.textContent = "Veuillez renseigner un email valide"
         }
+        console.log(testEmail);
     }
 }
+
+getForm();
 
 //on constitue un objet contact à partir des données du formulaire
 let contactObj = {
