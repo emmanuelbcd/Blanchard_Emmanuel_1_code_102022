@@ -261,10 +261,16 @@ function getForm() {
 
     //on crée les expressions régulières
     //pour la validation firstName, lastName et city
-    let letterRegEx = new RegExp("^[a-zA-Z ,.'-]+$", "g");
+    let letterFirstNameRegEx = new RegExp(/^[a-zA-Z ,.'-]+$/, "g");
+
+    //pour la validation lastName
+    let letterLastNameRegEx = new RegExp(/^[a-zA-Z ,.'-]+$/, "g");
+
+    //pour la validation city
+    let letterCityRegEx = new RegExp(/^[a-zA-ZÀ-ÖØ-öø-ſ ,.'-]+$/, "g");
 
     //pour la validation adresse
-    const addressRegEx = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+", "g");
+    const addressRegEx = new RegExp(/^(?:\d{1,3}, )?[a-zA-ZÀ-ÖØ-öø-ſ0-9 ,.'-]+$/, "g");
 
     //pour la validation email
     const emailRegEx = new RegExp(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/, "g");
@@ -276,7 +282,7 @@ function getForm() {
 
     //on crée la fonction validFirstName
     const validFirstName = function (inputFirstName) {
-        let testFirstName = letterRegEx.test(inputFirstName.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
+        let testFirstName = letterFirstNameRegEx.test(inputFirstName.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
         let firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
 
         if(testFirstName){
@@ -295,7 +301,7 @@ function getForm() {
 
     //on crée la fonction validLastName
     const validLastName = function (inputLastName) {
-        let testLastName = letterRegEx.test(inputLastName.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
+        let testLastName = letterLastNameRegEx.test(inputLastName.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
         let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
 
         if (testLastName) {
@@ -328,12 +334,12 @@ function getForm() {
 
     //on écoute la modification de la ville
     userForm.city.addEventListener("change", function() { //on écoute le changement et on utilise une fonction de callback pour lui dire quelle action on va devoir utiliser
-        validAddress(this); //on appelle une fonction qui s'appelle validAddress avec pour paramètre l'élément qui est écouté
+        validCity(this); //on appelle une fonction qui s'appelle validAddress avec pour paramètre l'élément qui est écouté
     });
 
     //on crée la fonction validCity
     const validCity = function (inputCity) {
-        let testCity = letterRegEx.test(inputCity.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
+        let testCity = letterCityRegEx.test(inputCity.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
         let cityErrorMsg = document.getElementById("cityErrorMsg");
 
         if (testCity) { //true
@@ -367,9 +373,32 @@ function getForm() {
 
 getForm();
 
-//on constitue un objet contact à partir des données du formulaire
-let contactObj = {
+//contact
+let contact;
 
+//on constitue un objet contact à partir des données du formulaire
+function createContactObject() {
+    let contact = {
+        firstName: inputFirstName.value,
+        lastName: inputLastName.value,
+        address: inputAddress.value,
+        city: inputCity.value,
+        email: inputEmail.value,
+    }
+}
+
+//on constitue un tableau de produits
+function createArrawProducts() {
+    
+}
+
+//on crée la fonction postOrder
+function postOrder() {
+    let order = document.getElementById("order");
+    order.addEventListener("click", function(event) {
+        event.preventDefault;
+
+    });
 }
 
 
