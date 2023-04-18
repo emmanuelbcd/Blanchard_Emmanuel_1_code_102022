@@ -373,30 +373,66 @@ function getForm() {
 
 getForm();
 
-//contact
-let contact;
-
 //on constitue un objet contact à partir des données du formulaire
 function createContactObject() {
+    
+    //on récupère les valeurs des champs du formulaire
+    let firstName = inputFirstName.value;
+    let lastName = inputLastName.value; 
+    let address = inputAddress.value;
+    let city = inputCity.value;
+    let email = inputEmail.value;
+
+    //on crée un objet contact avec ces valeurs
     let contact = {
-        firstName: inputFirstName.value,
-        lastName: inputLastName.value,
-        address: inputAddress.value,
-        city: inputCity.value,
-        email: inputEmail.value,
+        firstName: firstName,
+        lastName: lastName,
+        address: address,
+        city: city,
+        email: email
     }
+
+    //on retourne l'objet contact
+    return contact; // cette instruction permet d'utiliser l'objet contact dans d'autres parties
+
 }
 
 //on constitue un tableau de produits
-function createArrawProducts() {
+function createArrayProducts() {
     
+    let arrayProducts = [];
+
+
+
 }
 
 //on crée la fonction postOrder
 function postOrder() {
     let order = document.getElementById("order");
-    order.addEventListener("click", function(event) {
+    order.addEventListener("submit", function(event) {
+        //on empêche le comportement par défaut du formulaire
         event.preventDefault;
+        console.log("clic sur le bouton commander !");
+
+        //on crée l'objet contact
+        let contact = createContactObject();
+
+        //on envoie une requête JSON contenant un objet de contact et un tableau de produits
+        async function fetchOrder () {
+            const r = await fetch("http://localhost:3000/api/products/order", {
+                method: 'POST',
+                headers: {
+                    "Accept" : "application/json",
+                    "Content-Type" : "application/json"
+                }
+            })
+            if(r.ok === true) {
+                return r.json();
+            }
+            throw new Error('Impossible de contacter le serveur')
+        }
+        
+        fetchOrder().then(orderToSend => console.log(orderToSend))
 
     });
 }
