@@ -398,44 +398,70 @@ function createContactObject() {
 }
 
 //on constitue un tableau de produits
-function createArrayProducts() {
+function createArrayProducts(products) {
     
-    let arrayProducts = [];
+    //on récupère le panier ou localStorage
+    let cart = getLocalStorage;
 
+    //on boucle les produits du localstorage sans recalculer systématiquement la longueur grâce à i2
+    for(let i=0, i2= cart.length; i<i2; i++) {
+        let cartOrder = products.find( element => element._id == cart[i].id ) // on stocke le produit trouvé dans cartOrder
+        if(cartOrder) {
+            //on ajoute les infos supplémentaires au produit
+            cartOrder.color = cart[i].color;
+            cartOrder.number = cart[i].number;
+            totalQuantity += cartOrder.number; // on ajoute la quantité de l'élément actuel à totalQuantity
+            totalPrice += cartOrder.number * cartOrder.price;
 
+            //on ajoute le produit trouvé dans un tableau
+            this.products.push(cartOrder);
+
+        }
+
+    }
 
 }
 
+//on initialise le tableau de produits
+createArrayProducts(products);
+
 //on crée la fonction postOrder
 function postOrder() {
-    let order = document.getElementById("order");
-    order.addEventListener("submit", function(event) {
+    let formOrder = document.getElementById("order");
+    formOrder.addEventListener("submit", function(event) {
         //on empêche le comportement par défaut du formulaire
-        event.preventDefault;
+        event.preventDefault();
         console.log("clic sur le bouton commander !");
 
         //on crée l'objet contact
         let contact = createContactObject();
 
+        //on crée l'objet tableau de produits
+        let arrayProducts = createArrayProducts(products);
+
+        //on crée l'objet commande
+        let order = {
+            contact: contact,
+            arrayProducts: arrayProducts
+        }
+
         //on envoie une requête JSON contenant un objet de contact et un tableau de produits
-        async function fetchOrder () {
-            const r = await fetch("http://localhost:3000/api/products/order", {
+            fetch("http://localhost:3000/api/products/order", {
                 method: 'POST',
                 headers: {
                     "Accept" : "application/json",
                     "Content-Type" : "application/json"
-                }
+                },
+                body: JSON.stringify(order)
             })
-            if(r.ok === true) {
-                return r.json();
-            }
-            throw new Error('Impossible de contacter le serveur')
-        }
-        
-        fetchOrder().then(orderToSend => console.log(orderToSend))
-
+            .then(response => response.json)
+            .then(data => {
+                document.location.href=`./confirmation.html?orderId=${data.orderId}`;
+            })
     });
 }
+
+postOrder();
 
 
 
