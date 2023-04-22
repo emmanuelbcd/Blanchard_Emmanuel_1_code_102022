@@ -38,7 +38,7 @@ async function getProducts () {
 }
 
 
-var products = {};
+let products = {};
 //on appelle getProducts
 getProducts();
 
@@ -377,11 +377,11 @@ getForm();
 function createContactObject() {
     
     //on récupère les valeurs des champs du formulaire
-    let firstName = inputFirstName.value;
-    let lastName = inputLastName.value; 
-    let address = inputAddress.value;
-    let city = inputCity.value;
-    let email = inputEmail.value;
+    let firstName = document.getElementById("firstName").value;
+    let lastName = document.getElementById("lastName").value; 
+    let address = document.getElementById("address").value;
+    let city = document.getElementById("city").value;
+    let email = document.getElementById("email").value;
 
     //on crée un objet contact avec ces valeurs
     let contact = {
@@ -401,7 +401,12 @@ function createContactObject() {
 function createArrayProducts(products) {
     
     //on récupère le panier ou localStorage
-    let cart = getLocalStorage;
+    let cart = getLocalStorage();
+
+    //on met à jour le nombre d'articles dans le panier
+    //on met à jour le prix total du panier
+    let totalQuantity = 0;
+    let totalPrice = 0;
 
     //on boucle les produits du localstorage sans recalculer systématiquement la longueur grâce à i2
     for(let i=0, i2= cart.length; i<i2; i++) {
@@ -417,9 +422,7 @@ function createArrayProducts(products) {
             this.products.push(cartOrder);
 
         }
-
     }
-
 }
 
 //on initialise le tableau de produits
@@ -428,7 +431,7 @@ createArrayProducts(products);
 //on crée la fonction postOrder
 function postOrder() {
     let formOrder = document.getElementById("order");
-    formOrder.addEventListener("submit", function(event) {
+    formOrder.addEventListener("click", function(event) {
         //on empêche le comportement par défaut du formulaire
         event.preventDefault();
         console.log("clic sur le bouton commander !");
@@ -439,29 +442,35 @@ function postOrder() {
         //on crée l'objet tableau de produits
         let arrayProducts = createArrayProducts(products);
 
+        //on crée l'objet orderId
+        let orderId = {};
+
         //on crée l'objet commande
         let order = {
             contact: contact,
-            arrayProducts: arrayProducts
+            arrayProducts: arrayProducts,
+            orderId: orderId
         }
+        console.log(order);
 
         //on envoie une requête JSON contenant un objet de contact et un tableau de produits
-            fetch("http://localhost:3000/api/products/order", {
-                method: 'POST',
-                headers: {
-                    "Accept" : "application/json",
-                    "Content-Type" : "application/json"
-                },
-                body: JSON.stringify(order)
-            })
-            .then(response => response.json)
-            .then(data => {
-                document.location.href=`./confirmation.html?orderId=${data.orderId}`;
-            })
+        fetch("http://localhost:3000/api/products/order", {
+            method: 'POST',
+            headers: {
+                "Accept" : "application/json",
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify(order)
+        })
+        .then(response => response.json())
+        .then(response => {
+            document.location.href=`./confirmation.html?orderId=${response.orderId}`;
+        })
     });
 }
 
 postOrder();
+//localStorage.clear();
 
 
 
