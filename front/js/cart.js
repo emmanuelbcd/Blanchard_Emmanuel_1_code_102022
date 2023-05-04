@@ -12,6 +12,7 @@ function getLocalStorage () {
     }
     
 }
+
 let getCart = getLocalStorage (); //on stocke les données récupérées depuis la fonction getLocalStorage
 console.log('LocalStorage ou panier'); //on affiche la variable getCart
 console.table(getCart); //sous forme de tableau
@@ -38,8 +39,8 @@ async function getProducts () {
 }
 
 
-//let products = {};
-let products = [];
+let products = {};
+//let products = [];
 //on appelle getProducts
 getProducts();
 
@@ -393,16 +394,57 @@ function createContactObject() {
         email: email
     }
 
+    console.log("contact:", contact); // ajout d'un console.log pour vérifier la valeur de contact
+
     //on retourne l'objet contact
     return contact; // cette instruction permet d'utiliser l'objet contact dans d'autres parties
 
 }
 
+function validateForm () {
+    //on récupère l'object contact en utilisant la fonction createContactObject
+    let contact = createContactObject();
+
+    //on vérifie si chaque champ a une valeur
+    if(contact.firstName === "" || contact.lastName === "" || contact.address === "" || contact.city === "" || contact.email === "") {
+        //alert("Veuillez remplir tous les champs du formulaire");
+        return false
+    }
+
+    //si tous les champs passent, on retourne true
+    return true;
+
+}
+
+// on récupère tous les produits de l'API
+async function getAllProducts () {
+    const getApiProducts = await fetch ("http://localhost:3000/api/products", {
+    method: 'GET',
+    headers: {
+      "Accept" : "application/json"
+    }
+    })
+    .then ((resp) => resp.json())
+    .then ((resp) => {
+        console.log('données API') //on affiche resp, les données retournées par l'API
+        console.table(resp); //sous forme de tableau
+        createArrayProducts(resp); //on appelle createArrayProducts et on passe resp en paramètre
+    })
+    .catch ((error) => {
+        console.log(error);
+    });
+}
+
+//on appelle getAllProducts
+getAllProducts();
+
 //on constitue un tableau de produits
-function createArrayProducts(products) {
+function createArrayProducts(resp) {
+    console.log('createArrayProducts');
+    console.log(resp);
     
     //on récupère le panier ou localStorage
-    let cart = getLocalStorage();
+    let cartStorage = getLocalStorage();
 
     //on met à jour le nombre d'articles dans le panier
     //on met à jour le prix total du panier
@@ -410,61 +452,42 @@ function createArrayProducts(products) {
     let totalPrice = 0;
 
     // on initialise le tableau de produits
-    this.products = [];
+    productsInArray = [];
 
     //on boucle les produits du localstorage sans recalculer systématiquement la longueur grâce à i2
-    for(let i=0, i2= cart.length; i<i2; i++) {
-        let cartOrder = products.find( element => element._id == cart[i].id ) // on stocke le produit trouvé dans cartOrder
-        if(cartOrder) {
-            //on ajoute les infos supplémentaires au produit
-            cartOrder.color = cart[i].color;
-            cartOrder.number = cart[i].number;
-            totalQuantity += cartOrder.number; // on ajoute la quantité de l'élément actuel à totalQuantity
-            totalPrice += cartOrder.number * cartOrder.price;
+    for(let i=0, i2= cartStorage.length; i<i2; i++) {
+        let getOneProduct = resp.find( element => element._id == cartStorage[i].id ) // on stocke le produit trouvé dans getOneProduct
 
-            //on ajoute le produit trouvé dans un tableau
-            this.products.push(cartOrder);
+        //on ajoute le produit trouvé dans un tableau
+        productsInArray.push(getOneProduct);
 
-        }
     }
+    console.log("tableau de produits:", productsInArray); // ajout d'un console.log pour vérifier la valeur de contact
+    return productsInArray;
 }
 
 //on initialise le tableau de produits
-createArrayProducts(products);
+createArrayProducts(resp);
 
 //on crée la fonction postOrder
-function postOrder() {
+function postOrder(resp) {
     let formOrder = document.getElementById("order");
     formOrder.addEventListener("click", function(event){
         //on empêche le comportement par défaut du formulaire
         event.preventDefault();
         console.log("clic sur le bouton commander !");
+            
+        let checkForm = validateForm();
 
-        //on récupère les valeurs des champs du formulaire
-        let firstName = document.getElementById("firstName").value;
-        let lastName = document.getElementById("lastName").value; 
-        let address = document.getElementById("address").value;
-        let city = document.getElementById("city").value;
-        let email = document.getElementById("email").value;
+        let contact = createContactObject();
+        let products = createArrayProducts(resp);
 
-        if(firstName && lastName && address && city && email){
-            //on crée l'objet contact
-            let contact = createContactObject();
+        const order = {
+            contact: contact,
+            products: resp
+        };
 
-            //on crée l'objet tableau de produits
-            let arrayProducts = createArrayProducts(products);
-
-            //on crée l'objet orderId
-            //let orderId = {};
-
-            //on crée l'objet commande
-            let order = {
-                contact: contact,
-                arrayProducts: arrayProducts,
-                //orderId: orderId
-            }
-            console.log(order);
-
+        if(checkForm ===true){
             //on envoie une requête JSON contenant un objet de contact et un tableau de produits
             fetch("http://localhost:3000/api/products/order", {
                 method: 'POST',
@@ -475,17 +498,19 @@ function postOrder() {
                 body: JSON.stringify(order)
             })
             .then(response => response.json())
-            .then(response => {
-                document.location.href=`./confirmation.html?id=${response.orderId}`;
+            .then(data => {
+                console.log(response);
+                const orderId = data.orderId;
+                document.location.href=`./confirmation.html?id=${orderId}`;
             })
-        } else{
-            alert("veuillez compléter le formulaire de contact")
+        } else {
+            alert("Veuillez remplir tous les champs du formulaire")
         }
     });        
 }
 
-postOrder();
-//localStorage.clear();
+postOrder(resp);
+
 
 
 
