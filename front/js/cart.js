@@ -428,7 +428,6 @@ async function getAllProducts () {
     .then ((resp) => {
         console.log('données API') //on affiche resp, les données retournées par l'API
         console.table(resp); //sous forme de tableau
-        createArrayProducts(resp); //on appelle createArrayProducts et on passe resp en paramètre
     })
     .catch ((error) => {
         console.log(error);
@@ -439,24 +438,26 @@ async function getAllProducts () {
 getAllProducts();
 
 //on constitue un tableau de produits
-function createArrayProducts(resp) {
-    console.log('createArrayProducts');
-    console.log(resp);
+function createArrayProducts() {
+    //console.log('createArrayProducts');
+    //console.log(createArrayProducts);
     
     //on récupère le panier ou localStorage
     let cartStorage = getLocalStorage();
 
+    let apiProducts = getAllProducts();
+
     //on met à jour le nombre d'articles dans le panier
     //on met à jour le prix total du panier
-    let totalQuantity = 0;
-    let totalPrice = 0;
+    //let totalQuantity = 0;
+    //let totalPrice = 0;
 
     // on initialise le tableau de produits
     productsInArray = [];
 
     //on boucle les produits du localstorage sans recalculer systématiquement la longueur grâce à i2
     for(let i=0, i2= cartStorage.length; i<i2; i++) {
-        let getOneProduct = resp.find( element => element._id == cartStorage[i].id ) // on stocke le produit trouvé dans getOneProduct
+        let getOneProduct = apiProducts.find(element => element._id == cartStorage[i].id); // on stocke le produit trouvé dans getOneProduct
 
         //on ajoute le produit trouvé dans un tableau
         productsInArray.push(getOneProduct);
@@ -467,10 +468,10 @@ function createArrayProducts(resp) {
 }
 
 //on initialise le tableau de produits
-createArrayProducts(resp);
+//createArrayProducts();
 
 //on crée la fonction postOrder
-function postOrder(resp) {
+function postOrder() {
     let formOrder = document.getElementById("order");
     formOrder.addEventListener("click", function(event){
         //on empêche le comportement par défaut du formulaire
@@ -480,11 +481,11 @@ function postOrder(resp) {
         let checkForm = validateForm();
 
         let contact = createContactObject();
-        let products = createArrayProducts(resp);
+        let products = productsInArray;
 
         const order = {
             contact: contact,
-            products: resp
+            products: products
         };
 
         if(checkForm ===true){
@@ -509,7 +510,7 @@ function postOrder(resp) {
     });        
 }
 
-postOrder(resp);
+postOrder();
 
 
 
