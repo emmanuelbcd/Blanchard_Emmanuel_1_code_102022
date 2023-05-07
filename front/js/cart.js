@@ -435,10 +435,9 @@ function createArrayProducts() {
         let getOneProduct = products.find(element => element._id == getCart[i].id); // on stocke le produit trouvé dans getOneProduct
         if(getOneProduct){
             console.log("getOneProduct:", getOneProduct);
-            ids.push(getOneProduct._id);
+            //ids.push(getOneProduct._id);
+            ids.push( {"_id": getOneProduct._id} ) // clé - valeur
         }
-        //console.log("tableau de produits:", ids);
-        //return ids;
     }
     console.log("tableau de produits:", ids);
     return ids;
