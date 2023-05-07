@@ -39,8 +39,8 @@ async function getProducts () {
 }
 
 
-let products = {};
-//let products = [];
+//let products = {};
+let products = [];
 //on appelle getProducts
 getProducts();
 
@@ -406,69 +406,46 @@ function validateForm () {
     let contact = createContactObject();
 
     //on vérifie si chaque champ a une valeur
-    if(contact.firstName === "" || contact.lastName === "" || contact.address === "" || contact.city === "" || contact.email === "") {
+    //if(contact === "" || contact.firstName === "" || contact.lastName === "" || contact.address === "" || contact.city === "" || contact.email === "") {
         //alert("Veuillez remplir tous les champs du formulaire");
-        return false
+        //return false
+    //}
+    if (!contact || !contact.firstName || !contact.lastName || !contact.address || !contact.city || !contact.email) {
+        //alert("Veuillez remplir tous les champs du formulaire");
+        return false;
     }
 
     //si tous les champs passent, on retourne true
     return true;
-
 }
-
-// on récupère tous les produits de l'API
-async function getAllProducts () {
-    const getApiProducts = await fetch ("http://localhost:3000/api/products", {
-    method: 'GET',
-    headers: {
-      "Accept" : "application/json"
-    }
-    })
-    .then ((resp) => resp.json())
-    .then ((resp) => {
-        console.log('données API') //on affiche resp, les données retournées par l'API
-        console.table(resp); //sous forme de tableau
-    })
-    .catch ((error) => {
-        console.log(error);
-    });
-}
-
-//on appelle getAllProducts
-getAllProducts();
 
 //on constitue un tableau de produits
 function createArrayProducts() {
-    //console.log('createArrayProducts');
-    //console.log(createArrayProducts);
-    
-    //on récupère le panier ou localStorage
-    let cartStorage = getLocalStorage();
-
-    let apiProducts = getAllProducts();
 
     //on met à jour le nombre d'articles dans le panier
     //on met à jour le prix total du panier
     //let totalQuantity = 0;
     //let totalPrice = 0;
 
-    // on initialise le tableau de produits
-    productsInArray = [];
+    // on initialise le tableau d'identifiants de produits
+    let ids = [];
 
     //on boucle les produits du localstorage sans recalculer systématiquement la longueur grâce à i2
-    for(let i=0, i2= cartStorage.length; i<i2; i++) {
-        let getOneProduct = apiProducts.find(element => element._id == cartStorage[i].id); // on stocke le produit trouvé dans getOneProduct
-
-        //on ajoute le produit trouvé dans un tableau
-        productsInArray.push(getOneProduct);
-
+    for(let i=0, i2=getCart.length; i<i2; i++) {
+        let getOneProduct = products.find(element => element._id == getCart[i].id); // on stocke le produit trouvé dans getOneProduct
+        if(getOneProduct){
+            console.log("getOneProduct:", getOneProduct);
+            ids.push(getOneProduct._id);
+        }
+        //console.log("tableau de produits:", ids);
+        //return ids;
     }
-    console.log("tableau de produits:", productsInArray); // ajout d'un console.log pour vérifier la valeur de contact
-    return productsInArray;
+    console.log("tableau de produits:", ids);
+    return ids;
+
 }
 
-//on initialise le tableau de produits
-//createArrayProducts();
+createArrayProducts();
 
 //on crée la fonction postOrder
 function postOrder() {
@@ -479,32 +456,38 @@ function postOrder() {
         console.log("clic sur le bouton commander !");
             
         let checkForm = validateForm();
-
         let contact = createContactObject();
-        let products = productsInArray;
-
+        let ids = createArrayProducts();
+        
         const order = {
             contact: contact,
-            products: products
+            products: ids
         };
+        console.log("order:", order);
 
-        if(checkForm ===true){
-            //on envoie une requête JSON contenant un objet de contact et un tableau de produits
-            fetch("http://localhost:3000/api/products/order", {
-                method: 'POST',
-                headers: {
+        if(checkForm){
+            if(ids.length >= 1) {
+                //on envoie une requête JSON contenant un objet de contact et un tableau de produits
+                fetch("http://localhost:3000/api/products/order", {
+                    method: 'POST',
+                    headers: {
                     "Accept" : "application/json",
                     "Content-Type" : "application/json"
-                },
-                body: JSON.stringify(order)
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(response);
-                const orderId = data.orderId;
-                document.location.href=`./confirmation.html?id=${orderId}`;
-            })
-        } else {
+                    },
+                    body: JSON.stringify(order)
+                })
+                .then(response => response.json())
+                .then(response => {
+                    console.log(response);
+                    const orderId = response.orderId;
+                    document.location.href=`./confirmation.html?id=${orderId}`;
+                })
+            } 
+            else {
+                alert("Veuillez sélectionner au moins un produit avant de commander")
+            }
+        } 
+        else {
             alert("Veuillez remplir tous les champs du formulaire")
         }
     });        
