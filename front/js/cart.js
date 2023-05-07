@@ -436,7 +436,7 @@ function createArrayProducts() {
         if(getOneProduct){
             console.log("getOneProduct:", getOneProduct);
             //ids.push(getOneProduct._id);
-            ids.push( {"_id": getOneProduct._id} ) // clé - valeur
+            ids.push({'_id': getOneProduct._id}); // clé - valeur
         }
     }
     console.log("tableau de produits:", ids);
