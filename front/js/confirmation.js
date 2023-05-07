@@ -1,7 +1,7 @@
 
 const orderId = document.getElementById("orderId"); //Récupération de l'élément du DOM
 const parsedUrlOrder = new URL(window.location.href);
-const UrlOrderId = parsedUrlOrder.searchParams.get("orderId");
+const UrlOrderId = parsedUrlOrder.searchParams.get("id");
 
 orderId.textContent = UrlOrderId; //on assigne la valeur du numéro de commande à l'élément orderId
 
