@@ -406,10 +406,7 @@ function validateForm () {
     let contact = createContactObject();
 
     //on vérifie si chaque champ a une valeur
-    //if(contact === "" || contact.firstName === "" || contact.lastName === "" || contact.address === "" || contact.city === "" || contact.email === "") {
-        //alert("Veuillez remplir tous les champs du formulaire");
-        //return false
-    //}
+    
     if (!contact || !contact.firstName || !contact.lastName || !contact.address || !contact.city || !contact.email) {
         //alert("Veuillez remplir tous les champs du formulaire");
         return false;
@@ -422,11 +419,6 @@ function validateForm () {
 //on constitue un tableau de produits
 function createArrayProducts() {
 
-    //on met à jour le nombre d'articles dans le panier
-    //on met à jour le prix total du panier
-    //let totalQuantity = 0;
-    //let totalPrice = 0;
-
     // on initialise le tableau d'identifiants de produits
     let ids = [];
 
@@ -435,8 +427,8 @@ function createArrayProducts() {
         let getOneProduct = products.find(element => element._id == getCart[i].id); // on stocke le produit trouvé dans getOneProduct
         if(getOneProduct){
             console.log("getOneProduct:", getOneProduct);
-            //ids.push(getOneProduct._id);
-            ids.push({'_id': getOneProduct._id}); // clé - valeur
+            ids.push(getOneProduct._id);
+            //ids.push({'_id': getOneProduct._id}); // clé - valeur
         }
     }
     console.log("tableau de produits:", ids);
