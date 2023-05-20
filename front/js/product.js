@@ -74,6 +74,7 @@ buttonAddToCart.addEventListener("click", function(event){ //type d'événement 
 
     //Récupération de l'input quantity
     const quantitySelect = document.getElementById("quantity");
+    
     //Récupération de la quantité choisie par l'utilisateur
     let quantityValue = parseInt(quantitySelect.value); // on convertit la valeur en nombre entier
     let quantityValueMax = parseInt(quantitySelect.max); // on convertit la valeur max en nombre entier 
