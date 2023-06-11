@@ -405,14 +405,11 @@ function validateForm () {
     //on récupère l'object contact en utilisant la fonction createContactObject
     let contact = createContactObject();
 
-    //on vérifie si chaque champ a une valeur
-    
+    //on vérifie si chaque champ a une valeur valide
     if (!contact || !contact.firstName || !contact.lastName || !contact.address || !contact.city || !contact.email) {
-        //alert("Veuillez remplir tous les champs du formulaire");
         return false;
     }
 
-    //si tous les champs passent, on retourne true
     return true;
 }
 
@@ -440,7 +437,7 @@ createArrayProducts();
 //on crée la fonction postOrder
 function postOrder() {
     let formOrder = document.getElementById("order");
-    formOrder.addEventListener("click", function(event){
+    formOrder.addEventListener("submit", function(event){
         //on empêche le comportement par défaut du formulaire
         event.preventDefault();
         console.log("clic sur le bouton commander !");
@@ -484,8 +481,3 @@ function postOrder() {
 }
 
 postOrder();
-
-
-
-
-
