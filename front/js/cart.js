@@ -256,123 +256,126 @@ function cartPrice(totalPrice) {
     elementPrice.textContent = totalPrice;
 }
 
-//On crée une fonction qui récupère le formulaire saisi par l'utilisateur pour sa commande
-function getForm() {
-    //on récupère le formulaire saisi par l'utilisateur pour la commande
-    let userForm = document.querySelector(".cart__order__form");
+//on crée les expressions régulières
+//pour la validation firstName, lastName et city
+const letterFirstNameRegEx = new RegExp(/^[a-zA-Z ,.'-]+$/, "g");
 
-    //on crée les expressions régulières
-    //pour la validation firstName, lastName et city
-    let letterFirstNameRegEx = new RegExp(/^[a-zA-Z ,.'-]+$/, "g");
+//pour la validation lastName
+const letterLastNameRegEx = new RegExp(/^[a-zA-Z ,.'-]+$/, "g");
 
-    //pour la validation lastName
-    let letterLastNameRegEx = new RegExp(/^[a-zA-Z ,.'-]+$/, "g");
+//pour la validation city
+const letterCityRegEx = new RegExp(/^[a-zA-ZÀ-ÖØ-öø-ſ ,.'-]+$/, "g");
 
-    //pour la validation city
-    let letterCityRegEx = new RegExp(/^[a-zA-ZÀ-ÖØ-öø-ſ ,.'-]+$/, "g");
+//pour la validation adresse
+const addressRegEx = new RegExp(/^(?:\d{1,3}, )?[a-zA-ZÀ-ÖØ-öø-ſ0-9 ,.'-]+$/, "g");
 
-    //pour la validation adresse
-    const addressRegEx = new RegExp(/^(?:\d{1,3}, )?[a-zA-ZÀ-ÖØ-öø-ſ0-9 ,.'-]+$/, "g");
+//pour la validation email
+const emailRegEx = new RegExp(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/, "g");
 
-    //pour la validation email
-    const emailRegEx = new RegExp(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/, "g");
+//on récupère le formulaire saisi par l'utilisateur pour la commande
+const userForm = document.querySelector(".cart__order__form");
 
-    //on écoute la modification du prénom
-    userForm.firstName.addEventListener("change", function() { //on écoute le changement et on utilise une fonction de callback pour lui dire quelle action on va devoir utiliser
-        validFirstName(this); //on appelle une fonction qui s'appelle validFirstName avec pour paramètre l'élément qui est écouté
-    });
+//fonction validFirstName
+function validFirstName(inputFirstName) {
+    let testFirstName = letterFirstNameRegEx.test(inputFirstName.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
+    let firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
 
-    //on crée la fonction validFirstName
-    const validFirstName = function (inputFirstName) {
-        let testFirstName = letterFirstNameRegEx.test(inputFirstName.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
-        let firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
-
-        if(testFirstName){
-            firstNameErrorMsg.textContent = "";
-        }
-        else{
-            firstNameErrorMsg.textContent = "Veuillez renseigner un prénom valide";
-        }
-        console.log(testFirstName);
-    };
-
-    //on écoute la modification du nom
-    userForm.lastName.addEventListener("change", function() { //on écoute le changement et on utilise une fonction de callback pour lui dire quelle action on va devoir utiliser
-        validLastName(this); //on appelle une fonction qui s'appelle validLastName avec pour paramètre l'élément qui est écouté
-    });
-
-    //on crée la fonction validLastName
-    const validLastName = function (inputLastName) {
-        let testLastName = letterLastNameRegEx.test(inputLastName.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
-        let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
-
-        if (testLastName) {
-            lastNameErrorMsg.textContent = "";
-        }
-        else{
-            lastNameErrorMsg.textContent = "Veuillez renseigner un nom valide";
-        }
-        console.log(testLastName);
-    };
-
-    //on écoute la modification de l'adresse
-    userForm.address.addEventListener("change", function() { //on écoute le changement et on utilise une fonction de callback pour lui dire quelle action on va devoir utiliser
-        validAddress(this); //on appelle une fonction qui s'appelle validAddress avec pour paramètre l'élément qui est écouté
-    });
-
-    //on crée la fonction validAddress
-    const validAddress = function (inputAddress) {
-        let testAddress = addressRegEx.test(inputAddress.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
-        let addressErrorMsg = document.getElementById("addressErrorMsg");
-
-        if (testAddress) { //true
-            addressErrorMsg.textContent = "";
-        }
-        else{ //false
-            addressErrorMsg.textContent = "Veuillez renseigner une adresse valide";
-        }
-        console.log(testAddress);
-    };
-
-    //on écoute la modification de la ville
-    userForm.city.addEventListener("change", function() { //on écoute le changement et on utilise une fonction de callback pour lui dire quelle action on va devoir utiliser
-        validCity(this); //on appelle une fonction qui s'appelle validAddress avec pour paramètre l'élément qui est écouté
-    });
-
-    //on crée la fonction validCity
-    const validCity = function (inputCity) {
-        let testCity = letterCityRegEx.test(inputCity.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
-        let cityErrorMsg = document.getElementById("cityErrorMsg");
-
-        if (testCity) { //true
-            cityErrorMsg.textContent= "";
-        }
-        else { //false
-            cityErrorMsg.textContent = "Veuillez renseigner une ville valide";
-        }
-        console.log(testCity);
-    };
-
-    //on écoute la modification de l'e-mail
-    userForm.email.addEventListener("change", function() { //on écoute le changement et on utilise une fonction de callback pour lui dire quelle action on va devoir utiliser
-        validEmail(this); //on appelle une fonction qui s'appelle validEmail avec pour paramètre l'élément qui est écouté
-    });
-
-    //on crée la fonction validEmail
-    const validEmail = function (inputEmail) {
-        let testEmail = emailRegEx.test(inputEmail.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
-        let emailErrorMsg = document.getElementById("emailErrorMsg");
-
-        if (testEmail) { //true
-            emailErrorMsg.textContent = "";
-        }
-        else { //false
-            emailErrorMsg.textContent = "Veuillez renseigner un email valide"
-        }
-        console.log(testEmail);
+    if(testFirstName){
+        firstNameErrorMsg.textContent = "";
     }
+    else{
+        firstNameErrorMsg.textContent = "Veuillez renseigner un prénom valide";
+    }
+    //console.log(testFirstName);
 }
 
+
+//fonction validLastName
+function validLastName(inputLastName) {
+    let testLastName = letterLastNameRegEx.test(inputLastName.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
+    let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
+
+    if (testLastName) {
+        lastNameErrorMsg.textContent = "";
+    }
+    else{
+        lastNameErrorMsg.textContent = "Veuillez renseigner un nom valide";
+    }
+    //console.log(testLastName);
+}
+
+
+//fonction validAddress
+function validAddress(inputAddress) {
+    let testAddress = addressRegEx.test(inputAddress.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
+    let addressErrorMsg = document.getElementById("addressErrorMsg");
+
+    if (testAddress) { //true
+        addressErrorMsg.textContent = "";
+    }
+    else{ //false
+        addressErrorMsg.textContent = "Veuillez renseigner une adresse valide";
+    }
+    //console.log(testAddress);
+}
+
+
+//fonction validCity
+function validCity(inputCity) {
+    let testCity = letterCityRegEx.test(inputCity.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
+    let cityErrorMsg = document.getElementById("cityErrorMsg");
+
+    if (testCity) { //true
+        cityErrorMsg.textContent= "";
+    }
+    else { //false
+        cityErrorMsg.textContent = "Veuillez renseigner une ville valide";
+    }
+    //console.log(testCity);
+}
+
+
+//fonction validEmail
+function validEmail(inputEmail) {
+    let testEmail = emailRegEx.test(inputEmail.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
+    let emailErrorMsg = document.getElementById("emailErrorMsg");
+
+    if (testEmail) { //true
+        emailErrorMsg.textContent = "";
+    }
+    else { //false
+        emailErrorMsg.textContent = "Veuillez renseigner un email valide"
+    }
+    //console.log(testEmail);
+}
+
+//fonction getForm
+function getForm() {
+    // Écouter la modification du prénom
+    userForm.firstName.addEventListener("change", function() {
+        validFirstName(firstName);
+    });
+
+    // Écouter la modification du nom
+    userForm.lastName.addEventListener("change", function() {
+        validLastName(lastName);
+    });
+
+    // Écouter la modification de l'adresse
+    userForm.address.addEventListener("change", function() {
+        validAddress(address);
+    });
+
+    // Écouter la modification de la ville
+    userForm.city.addEventListener("change", function() {
+        validCity(city);
+    });
+
+    // Écouter la modification de l'e-mail
+    userForm.email.addEventListener("change", function() {
+        validEmail(email);
+    });
+}
 getForm();
 
 //on constitue un objet contact à partir des données du formulaire
@@ -380,10 +383,15 @@ function createContactObject() {
     
     //on récupère les valeurs des champs du formulaire
     let firstName = document.getElementById("firstName").value;
+    console.log("prénom:", firstName);
     let lastName = document.getElementById("lastName").value; 
+    console.log("nom:", lastName);
     let address = document.getElementById("address").value;
+    console.log("adresse:", address);
     let city = document.getElementById("city").value;
+    console.log("ville:", city);
     let email = document.getElementById("email").value;
+    console.log("email:", email);
 
     //on crée un objet contact avec ces valeurs
     let contact = {
@@ -404,13 +412,38 @@ function createContactObject() {
 function validateForm () {
     //on récupère l'object contact en utilisant la fonction createContactObject
     let contact = createContactObject();
+    let html = ``;
 
-    //on vérifie si chaque champ a une valeur valide
-    if (!contact || !contact.firstName || !contact.lastName || !contact.address || !contact.city || !contact.email) {
-        return false;
+    if (contact == false)
+    {
+        html += `<li>Pas bien...</li>`
+    }
+    else if (contact.firstName == false || validFirstName(contact.firstName) == false )
+    {
+        html += `<li>Veuillez indiquer un prénom valide </li>`
+    }
+    else if (contact.lastName == false || validLastName(contact.lastName) == false )
+    {
+        html += `<li>Veuillez indiquer un nom valide </li>`
+    }
+    else if (contact.address == false || validAddress(contact.address) == false )
+    {
+        html += `<li>Veuillez indiquer une adresse valide </li>`
+    }
+    else if (contact.city == false || validCity(contact.city) == false )
+    {
+        html += `<li>Veuillez indiquer une ville valide </li>`
+    }
+    else if (contact.email == false || validEmail(contact.email) == false )
+    {
+        html += `<li>Veuillez indiquer une adresse email valide </li>`
     }
 
-    return true;
+    if( html.length > 0 )
+    {
+        html = `<ul>` + html + `</ul>`
+    }
+    return html
 }
 
 //on constitue un tableau de produits
@@ -427,7 +460,7 @@ function createArrayProducts() {
             ids.push(getOneProduct._id); //on pousse un tableau avec uniquement les identifiants des produits
         }
     }
-    //console.log("tableau de produits:", ids);
+    console.log("tableau de produits:", ids);
     return ids;
 
 }
@@ -437,22 +470,27 @@ createArrayProducts();
 //on crée la fonction postOrder
 function postOrder() {
     let formOrder = document.getElementById("order");
-    formOrder.addEventListener("submit", function(event){
+    formOrder.addEventListener("click", function(event){
         //on empêche le comportement par défaut du formulaire
         event.preventDefault();
         console.log("clic sur le bouton commander !");
-            
-        let checkForm = validateForm();
+
+        let htmlErrors = validateForm();
+        if( htmlErrors.length > 0 )
+        {
+            alert(htmlErrors);
+            return false;
+        }
+        else {
+            //let checkForm = validateForm();
         let contact = createContactObject();
         let ids = createArrayProducts();
-        
+    
         const order = {
             contact: contact,
             products: ids
         };
         console.log("order:", order);
-
-        if(checkForm){
             if(ids.length >= 1) {
                 //on envoie une requête JSON contenant un objet de contact et un tableau de produits
                 fetch("http://localhost:3000/api/products/order", {
@@ -468,14 +506,11 @@ function postOrder() {
                     console.log(response);
                     const orderId = response.orderId;
                     document.location.href=`./confirmation.html?id=${orderId}`;
+                    localStorage.removeItem("obj");
                 })
-            } 
-            else {
-                alert("Veuillez sélectionner au moins un produit avant de commander")
+            } else {
+                alert("Veuillez sélectionner au moins un produit avant de commander");
             }
-        } 
-        else {
-            alert("Veuillez remplir tous les champs du formulaire")
         }
     });        
 }
