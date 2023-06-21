@@ -283,7 +283,7 @@ let testEmail;
 
 //fonction validFirstName
 function validFirstName(inputFirstName) {
-    let testFirstName = letterFirstNameRegEx.test(inputFirstName.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
+    testFirstName = letterFirstNameRegEx.test(inputFirstName.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
     let firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
 
     if(testFirstName){
@@ -299,7 +299,7 @@ function validFirstName(inputFirstName) {
 
 //fonction validLastName
 function validLastName(inputLastName) {
-    let testLastName = letterLastNameRegEx.test(inputLastName.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
+    testLastName = letterLastNameRegEx.test(inputLastName.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
     let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
 
     if (testLastName) {
@@ -315,7 +315,7 @@ function validLastName(inputLastName) {
 
 //fonction validAddress
 function validAddress(inputAddress) {
-    let testAddress = addressRegEx.test(inputAddress.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
+    testAddress = addressRegEx.test(inputAddress.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
     let addressErrorMsg = document.getElementById("addressErrorMsg");
 
     if (testAddress) { //true
@@ -331,7 +331,7 @@ function validAddress(inputAddress) {
 
 //fonction validCity
 function validCity(inputCity) {
-    let testCity = letterCityRegEx.test(inputCity.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
+    testCity = letterCityRegEx.test(inputCity.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
     let cityErrorMsg = document.getElementById("cityErrorMsg");
 
     if (testCity) { //true
@@ -347,7 +347,7 @@ function validCity(inputCity) {
 
 //fonction validEmail
 function validEmail(inputEmail) {
-    let testEmail = emailRegEx.test(inputEmail.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
+    testEmail = emailRegEx.test(inputEmail.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
     let emailErrorMsg = document.getElementById("emailErrorMsg");
 
     if (testEmail) { //true
@@ -359,12 +359,6 @@ function validEmail(inputEmail) {
     console.log(testEmail);
     return testEmail;
 }
-
-//let isValidFirstName;
-//let isValidLastName;
-//let isValidAddress;
-//let isValidCity;
-//let isValidEmail;
 
 //fonction getForm
 function getForm() {
@@ -445,23 +439,23 @@ function validateForm () {
     //{
     //    html += `<li>Pas bien...</li>`
     //}
-    if (contact.firstName == false || validFirstName(contact.firstName) == false )
+    if (contact.firstName == false || testFirstName == false )
     {
         html += `Veuillez indiquer un prénom valide\n`
     }
-    if (contact.lastName == false || validLastName(contact.firstName) == false )
+    if (contact.lastName == false || testLastName == false )
     {
         html += `Veuillez indiquer un nom valide\n`
     }
-    if (contact.address == false || validAddress(contact.address) == false )
+    if (contact.address == false || testAddress == false )
     {
         html += `Veuillez indiquer une adresse valide\n`
     }
-    if (contact.city == false || validCity(contact.city) == false )
+    if (contact.city == false || testCity == false )
     {
         html += `Veuillez indiquer une ville valide\n`
     }
-    if (contact.email == false || validEmail(contact.email) == false )
+    if (contact.email == false || testEmail == false )
     {
         html += `Veuillez indiquer une adresse email valide\n`
     }
@@ -532,7 +526,7 @@ function postOrder() {
                 .then(response => {
                     console.log(response);
                     const orderId = response.orderId;
-                    //document.location.href=`./confirmation.html?id=${orderId}`;
+                    document.location.href=`./confirmation.html?id=${orderId}`;
                     localStorage.removeItem("obj");
                 })
             } 
