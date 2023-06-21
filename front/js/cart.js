@@ -275,6 +275,12 @@ const emailRegEx = new RegExp(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+
 //on récupère le formulaire saisi par l'utilisateur pour la commande
 const userForm = document.querySelector(".cart__order__form");
 
+let testFirstName;
+let testLastName;
+let testAddress;
+let testCity;
+let testEmail;
+
 //fonction validFirstName
 function validFirstName(inputFirstName) {
     let testFirstName = letterFirstNameRegEx.test(inputFirstName.value); //on vérifie s'il y a une correspondance entre ce que l'utilisateur a saisi et une expression régulière
@@ -286,7 +292,8 @@ function validFirstName(inputFirstName) {
     else{
         firstNameErrorMsg.textContent = "Veuillez renseigner un prénom valide";
     }
-    //console.log(testFirstName);
+    console.log(testFirstName);
+    return testFirstName;
 }
 
 
@@ -301,7 +308,8 @@ function validLastName(inputLastName) {
     else{
         lastNameErrorMsg.textContent = "Veuillez renseigner un nom valide";
     }
-    //console.log(testLastName);
+    console.log(testLastName);
+    return testLastName;
 }
 
 
@@ -316,7 +324,8 @@ function validAddress(inputAddress) {
     else{ //false
         addressErrorMsg.textContent = "Veuillez renseigner une adresse valide";
     }
-    //console.log(testAddress);
+    console.log(testAddress);
+    return testAddress;
 }
 
 
@@ -331,7 +340,8 @@ function validCity(inputCity) {
     else { //false
         cityErrorMsg.textContent = "Veuillez renseigner une ville valide";
     }
-    //console.log(testCity);
+    console.log(testCity);
+    return testCity;
 }
 
 
@@ -346,33 +356,50 @@ function validEmail(inputEmail) {
     else { //false
         emailErrorMsg.textContent = "Veuillez renseigner un email valide"
     }
-    //console.log(testEmail);
+    console.log(testEmail);
+    return testEmail;
 }
+
+//let isValidFirstName;
+//let isValidLastName;
+//let isValidAddress;
+//let isValidCity;
+//let isValidEmail;
 
 //fonction getForm
 function getForm() {
     // Écouter la modification du prénom
     userForm.firstName.addEventListener("change", function() {
+        //let isValidFirstName = validFirstName(userForm.firstName);
+        //console.log(isValidFirstName); //on affiche la valeur retournée par validFirstName
         validFirstName(firstName);
     });
 
     // Écouter la modification du nom
     userForm.lastName.addEventListener("change", function() {
+        //let isValidLastName = validLastName(userForm.lastName);
+        //console.log(isValidLastName); //on affiche la valeur retournée par validLastName
         validLastName(lastName);
     });
 
     // Écouter la modification de l'adresse
     userForm.address.addEventListener("change", function() {
+        //let isValidAddress = validAddress(userForm.address);
+        //console.log(isValidAddress); //on affiche la valeur retournée par validAddress
         validAddress(address);
     });
 
     // Écouter la modification de la ville
     userForm.city.addEventListener("change", function() {
+        //let isValidCity = validCity(userForm.city);
+        //console.log(isValidCity);
         validCity(city);
     });
 
     // Écouter la modification de l'e-mail
     userForm.email.addEventListener("change", function() {
+        //let isValidEmail = validEmail(userForm.email); //on affiche la valeur retournée par validEmail
+        //console.log(isValidEmail);
         validEmail(email);
     });
 }
@@ -414,35 +441,35 @@ function validateForm () {
     let contact = createContactObject();
     let html = ``;
 
-    if (contact == false)
+    //if (contact == false)
+    //{
+    //    html += `<li>Pas bien...</li>`
+    //}
+    if (contact.firstName == false || validFirstName(contact.firstName) == false )
     {
-        html += `<li>Pas bien...</li>`
+        html += `Veuillez indiquer un prénom valide\n`
     }
-    else if (contact.firstName == false || validFirstName(contact.firstName) == false )
+    if (contact.lastName == false || validLastName(contact.firstName) == false )
     {
-        html += `<li>Veuillez indiquer un prénom valide </li>`
+        html += `Veuillez indiquer un nom valide\n`
     }
-    else if (contact.lastName == false || validLastName(contact.lastName) == false )
+    if (contact.address == false || validAddress(contact.address) == false )
     {
-        html += `<li>Veuillez indiquer un nom valide </li>`
+        html += `Veuillez indiquer une adresse valide\n`
     }
-    else if (contact.address == false || validAddress(contact.address) == false )
+    if (contact.city == false || validCity(contact.city) == false )
     {
-        html += `<li>Veuillez indiquer une adresse valide </li>`
+        html += `Veuillez indiquer une ville valide\n`
     }
-    else if (contact.city == false || validCity(contact.city) == false )
+    if (contact.email == false || validEmail(contact.email) == false )
     {
-        html += `<li>Veuillez indiquer une ville valide </li>`
-    }
-    else if (contact.email == false || validEmail(contact.email) == false )
-    {
-        html += `<li>Veuillez indiquer une adresse email valide </li>`
+        html += `Veuillez indiquer une adresse email valide\n`
     }
 
-    if( html.length > 0 )
-    {
-        html = `<ul>` + html + `</ul>`
-    }
+    //if( html.length > 0 )
+    //{
+    //    html = `<ul>` + html + `</ul>`
+    //}
     return html
 }
 
@@ -483,14 +510,14 @@ function postOrder() {
         }
         else {
             //let checkForm = validateForm();
-        let contact = createContactObject();
-        let ids = createArrayProducts();
+            let contact = createContactObject();
+            let ids = createArrayProducts();
     
-        const order = {
-            contact: contact,
-            products: ids
-        };
-        console.log("order:", order);
+            const order = {
+                contact: contact,
+                products: ids
+            };
+            console.log("order:", order);
             if(ids.length >= 1) {
                 //on envoie une requête JSON contenant un objet de contact et un tableau de produits
                 fetch("http://localhost:3000/api/products/order", {
@@ -505,10 +532,11 @@ function postOrder() {
                 .then(response => {
                     console.log(response);
                     const orderId = response.orderId;
-                    document.location.href=`./confirmation.html?id=${orderId}`;
+                    //document.location.href=`./confirmation.html?id=${orderId}`;
                     localStorage.removeItem("obj");
                 })
-            } else {
+            } 
+            else {
                 alert("Veuillez sélectionner au moins un produit avant de commander");
             }
         }
