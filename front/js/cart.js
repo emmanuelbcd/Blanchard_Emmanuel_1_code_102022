@@ -435,10 +435,6 @@ function validateForm () {
     let contact = createContactObject();
     let html = ``;
 
-    //if (contact == false)
-    //{
-    //    html += `<li>Pas bien...</li>`
-    //}
     if (contact.firstName == false || testFirstName == false )
     {
         html += `Veuillez indiquer un prénom valide\n`
@@ -460,10 +456,6 @@ function validateForm () {
         html += `Veuillez indiquer une adresse email valide\n`
     }
 
-    //if( html.length > 0 )
-    //{
-    //    html = `<ul>` + html + `</ul>`
-    //}
     return html
 }
 
@@ -503,7 +495,6 @@ function postOrder() {
             return false;
         }
         else {
-            //let checkForm = validateForm();
             let contact = createContactObject();
             let ids = createArrayProducts();
     
