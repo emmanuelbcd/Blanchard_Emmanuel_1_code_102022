@@ -66,11 +66,20 @@ const buttonAddToCart = document.getElementById("addToCart");
 //Ajout d'un écouteur d'événement au clic sur le boutton d'ajout au panier
 buttonAddToCart.addEventListener("click", function(event){ //type d'événement que l'on écoute et fonction appelée lors du déclenchement de l'événement
     console.log(event)
+    //on empêche le comportement par défaut du formulaire
+    event.preventDefault();
+    console.log("clic sur le bouton ajouter au panier");
 
     //Récupération de l'input colors
     const colorSelect = document.getElementById("colors");
     //Récupération de la couleur choisie par l'utilisateur dans l'option couleurs
     let colorValue = colorSelect.value;
+
+    //if(colorValue === ""){ alert("Veuillez sélectionner une couleur")}
+    if (colorValue === "") {
+        alert("Veuillez sélectionner une couleur");
+        return;
+    }
 
     //Récupération de l'input quantity
     const quantitySelect = document.getElementById("quantity");
@@ -79,6 +88,20 @@ buttonAddToCart.addEventListener("click", function(event){ //type d'événement 
     let quantityValue = parseInt(quantitySelect.value); // on convertit la valeur en nombre entier
     let quantityValueMax = parseInt(quantitySelect.max); // on convertit la valeur max en nombre entier 
     let quantityValueMin = parseInt(quantitySelect.min); //on convertit la valeur min en nombre entier 
+
+    //Pour contrer les rigolos qui auraient passé autre chose, on vérifie si la nouvelle valeur n'est pas un nombre
+    if( isNaN( parseInt(quantityValue) )) { 
+        quantityValue = quantityValueMin; //on convertit à min
+        alert ("1 article ajouté au panier");
+    }
+    else
+    {
+        //on recadre les valeurs si elles sont hors champs
+        if( quantityValue < quantityValueMin ) { quantityValue = quantityValueMin;
+            alert ("1 article ajouté au panier"); }
+        if( quantityValue > quantityValueMax ) { quantityValue = quantityValueMax;
+            alert ("Maximum du panier par article de même couleur atteint"); }
+    }
 
     //Création d'un objet qui récupère les paramètres pour l'envoyer dans le localStorage
     let obj = {
@@ -147,6 +170,12 @@ buttonAddToCart.addEventListener("click", function(event){ //type d'événement 
         }
         saveObject(cart);
         alert("Ajout au panier")
+    }
+
+    // on vérifie la couleur choisie avant l'ajout au panier
+    if(colorValue === ""){ 
+        alert("Veuillez sélectionner une couleur");
+        return; //on arrête l'exécution de la fonction et empêche l'ajout au panier
     }
     
     // on appelle la fonction qui ajoute l'objet au panier et enregistre dans le localStorage
